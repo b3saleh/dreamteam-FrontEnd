@@ -22,11 +22,19 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 2rem;
     text-align: center;
     text-transform: uppercase;
+    color: #ffde59;
   }
   img {
     border-radius: 5px;
     height: auto;
     width: 10rem;
+  }
+
+  bg {
+    border-radius: 5px;
+    height: auto;
+    width: 10rem;
+    opacity: 0.5;
   }
   div {
     text-align: center;

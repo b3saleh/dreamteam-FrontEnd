@@ -1,14 +1,33 @@
 import React from 'react';
+import logo from '../DreamTeamLogo.PNG';
+import { GlobalStyles } from '../global';
+
  
-export const Joinatryout = () => {
+export const Findatryout = () => {
     return (
        <div>
-          <h1>Join A Tryout!</h1>
-          <p>SGETITTTTT</p>
-         
+         <img src={logo} className="bg" alt="logo" />
+          <div class="text-block">
+          	<h1>Find A Tryout</h1>
+   			 
+
+   			 <form>
+ 				 <input type="text" placeholder= "Tryout Name" />
+ 				 
+ 				 
+ 				
+ 				
+ 				 <br/>
+ 				 <input type="submit" value="Search" />
+
+  				</form>
+  			
+
+   			 
+ 		 </div>
 
        </div>
     );
 }
  
-export default Joinatryout;
+export default Findatryout;

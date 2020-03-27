@@ -13,7 +13,7 @@ import {Home} from './pages/Home';
 import {About} from './pages/About';
 import {Signin} from './pages/Signin';
 import {Signup} from './pages/Signup';
-import {Joinatryout} from './pages/Joinatryout';
+import {Findatryout} from './pages/Joinatryout';
 
 
 
@@ -37,7 +37,7 @@ function App() {
             <Route exact path= "/About" component={About}/>
             <Route exact path= "/SignIn" component={Signin}/>
             <Route exact path= "/SignUp" component={Signup}/>
-            <Route exact path= "/JoinATryout" component={Joinatryout}/>
+            <Route exact path= "/FindATryout" component={Findatryout}/>
 
           </Router>
           
