@@ -14,6 +14,8 @@ import {About} from './pages/About';
 import {Signin} from './pages/Signin';
 import {Signup} from './pages/Signup';
 import {Findatryout} from './pages/Joinatryout';
+import {Dashboard} from './pages/Dashboard';
+import {NotFound} from './pages/NotFound';
 
 
 
@@ -33,12 +35,16 @@ function App() {
         <GlobalStyles />
         <div>
           <Router>
-            <Route exact path= "/" component={Home}/>
-            <Route exact path= "/About" component={About}/>
-            <Route exact path= "/SignIn" component={Signin}/>
-            <Route exact path= "/SignUp" component={Signup}/>
-            <Route exact path= "/FindATryout" component={Findatryout}/>
+            <Switch>
+              <Route exact path= "/" component={Home}/>
+              <Route exact path= "/About" component={About}/>
+              <Route exact path= "/SignIn" component={Signin}/>
+              <Route exact path= "/SignUp" component={Signup}/>
+              <Route exact path= "/FindATryout" component={Findatryout}/>
+              <Route exact path= "/dashboard/:id" component={Dashboard}/>
+              <Route component={NotFound} />
 
+            </Switch>
           </Router>
           
           
