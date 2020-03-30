@@ -29,13 +29,14 @@ class SignInForm extends React.Component {
 					this.setState({userID: result.userID});
 				},
 				(error) => {
-					this.setState({userID: "test"});
 				});
 	}
 
 	render() {
 		if (this.state.userID){
-			return <Redirect to="/dashboard" />
+			return (
+				<Redirect to={'/dashboard/' + this.state.userID}/>
+			);
 		}
 		return (
 			<form>
@@ -46,7 +47,7 @@ class SignInForm extends React.Component {
 				<input type="password" onChange={this.passwordChangeHandler} placeholder="Password"/>
 
 				<br/>
-				<input type="button" value="Button" onClick={this.checkUser}/>
+				<input type="button" value="Submit" onClick={this.checkUser}/>
 
 				<br/>
 			</form>
