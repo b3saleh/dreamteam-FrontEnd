@@ -1,8 +1,7 @@
 import React from 'react';
 import logo from '../DreamTeamLogo.PNG';
 import { GlobalStyles } from '../global';
-import {urlAPI} from '../Constants'
-import { useHistory } from 'react-router-dom';
+import {urlAPI} from '../Constants';
 import { Redirect } from 'react-router-dom';
 
 
@@ -10,7 +9,7 @@ class SignInForm extends React.Component {
 
 	constructor(props){
 		super(props);
-		this.state = { username: '', password: '', userID: '', redirect: ''};
+		this.state = { username: '', password: '', userID: ''};
 	}
 
 	usernameChangeHandler = (event) =>{
