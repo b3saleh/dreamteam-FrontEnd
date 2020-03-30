@@ -74,7 +74,7 @@ input[type=password], select, textarea {
   resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 
-input[type=submit] {
+input[type=button] {
   font-family:"helvetica";
   font-weight: bold;
   background-color:#ffde59;

@@ -2,13 +2,15 @@ import React from 'react';
 import logo from '../DreamTeamLogo.PNG';
 import { GlobalStyles } from '../global';
 import {urlAPI} from '../Constants'
+import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 
 
 class SignInForm extends React.Component {
+
 	constructor(props){
 		super(props);
-		this.state = { username: '', password: '', userID: ''};
+		this.state = { username: '', password: '', userID: '', redirect: ''};
 	}
 
 	usernameChangeHandler = (event) =>{
@@ -26,7 +28,6 @@ class SignInForm extends React.Component {
 			.then(
 				(result) => {
 					this.setState({userID: result.userID});
-					Redirect("/UserProfile");
 				},
 				(error) => {
 					this.setState({userID: "test"});
@@ -34,8 +35,12 @@ class SignInForm extends React.Component {
 	}
 
 	render() {
+		if (this.state.userID){
+			return <Redirect to="/dashboard" />
+		}
 		return (
 			<form>
+				{this.state.redirect}
 				<input type="text" onChange={this.usernameChangeHandler} placeholder="Username"/>
 
 				<br/>
