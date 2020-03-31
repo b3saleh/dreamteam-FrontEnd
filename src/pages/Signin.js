@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 
 
 class SignInForm extends React.Component {
-
 	constructor(props){
 		super(props);
 		this.state = { username: '', password: '', userID: ''};
@@ -58,7 +57,6 @@ class SignInForm extends React.Component {
 export const Signin = () => {
     return (
        <div>
-          
           <img src={logo} className="bg" alt="logo" />
           <div class="text-block">
           	<h1>Sign In</h1>

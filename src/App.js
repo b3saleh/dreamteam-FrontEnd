@@ -25,6 +25,7 @@ import {NotFound} from './pages/NotFound';
 
 function App() {
   const [open, setOpen] = useState(false);
+  const [userFirstName, setUserFirstName] = useState("Ben");
   const node = useRef();
   useOnClickOutside(node, () => setOpen(false));
 
