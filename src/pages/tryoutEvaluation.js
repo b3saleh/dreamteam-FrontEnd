@@ -37,7 +37,7 @@ class EvalGauge extends React.Component{
     render() {
         let plusButton;
         let minusButton;
-        if(this.state.score >0.9){
+        if(this.state.score > 0.9){
             plusButton = <button onClick={this.increaseScore} disabled={true}>+</button>
         } else {
             plusButton = <button onClick={this.increaseScore}>+</button>
@@ -144,7 +144,6 @@ export const tryoutEvaluation = () => {
             <EvalGauge name="gauges3" idNum="3" />
             <EvalComments/>
            
-
 
  		<div class="topnav">
  		     <a href="/Notifications" >
