@@ -25,6 +25,7 @@ class SignInForm extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
+					this.props.completeLogin(result.userID);
 					this.setState({userID: result.userID});
 				},
 				(error) => {
@@ -38,34 +39,28 @@ class SignInForm extends React.Component {
 			);
 		}
 		return (
-			<form>
-				{this.state.redirect}
-				<input type="text" onChange={this.usernameChangeHandler} placeholder="Username"/>
+			<div>
+				<img src={logo} className="bg" alt="logo"/>
+				<div className="text-block">
+					<h1>Sign In</h1>
+					<form>
+						{this.state.redirect}
+						<input type="text" value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
 
-				<br/>
-				<input type="password" onChange={this.passwordChangeHandler} placeholder="Password"/>
+						<br/>
+						<input type="password" value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
 
-				<br/>
-				<input type="button" value="Submit" onClick={this.checkUser}/>
+						<br/>
+						<input type="button" value="Submit" onClick={this.checkUser}/>
 
-				<br/>
-			</form>
+						<br/>
+					</form>
+				</div>
+
+
+			</div>
 		);
 	}
 }
 
-export const Signin = () => {
-    return (
-       <div>
-          <img src={logo} className="bg" alt="logo" />
-          <div class="text-block">
-          	<h1>Sign In</h1>
-			  <SignInForm />
- 		 </div>
-        
-
-       </div>
-    );
-}
- 
-export default Signin;
+export {SignInForm};
