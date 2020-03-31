@@ -18,6 +18,7 @@ import {userDashboard} from './pages/userDashboard'
 import {createATryout} from './pages/createatryout'
 import {buildTeam} from './pages/buildTeam'
 import {tryoutEvaluation} from './pages/tryoutEvaluation'
+import {NotFound} from './pages/NotFound';
 
 
 
@@ -37,17 +38,19 @@ function App() {
         <GlobalStyles />
         <div>
           <Router>
-            <Route exact path= "/" component={Home}/>
-            <Route exact path= "/About" component={About}/>
-            <Route exact path= "/SignIn" component={Signin}/>
-            <Route exact path= "/SignUp" component={Signup}/>
-            <Route exact path= "/FindATryout" component={Findatryout}/>
-            <Route exact path= "/user" component={userDashboard}/>
-            <Route exact path= "/CreateaTryout" component={createATryout}/>
-            <Route exact path= "/BuildTeam" component={buildTeam}/>
-            <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
+            <Switch>
+              <Route exact path= "/" component={Home}/>
+              <Route exact path= "/About" component={About}/>
+              <Route exact path= "/SignIn" component={Signin}/>
+              <Route exact path= "/SignUp" component={Signup}/>
+              <Route exact path= "/FindATryout" component={Findatryout}/>
+              <Route exact path= "/user" component={userDashboard}/>
+              <Route exact path= "/CreateaTryout" component={createATryout}/>
+              <Route exact path= "/BuildTeam" component={buildTeam}/>
+              <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
+              <Route component={NotFound} />
 
-
+            </Switch>
           </Router>
           
           
