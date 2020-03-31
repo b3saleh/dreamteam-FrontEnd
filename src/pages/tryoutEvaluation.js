@@ -37,12 +37,12 @@ class EvalGauge extends React.Component{
     render() {
         let plusButton;
         let minusButton;
-        if(this.state.score === 1){
+        if(this.state.score > 0.9){
             plusButton = <button onClick={this.increaseScore} disabled={true}>+</button>
         } else {
             plusButton = <button onClick={this.increaseScore}>+</button>
         }
-        if(this.state.score === 0){
+        if(this.state.score < 0.1){
             minusButton = <button onClick={this.decreaseScore} disabled={true}>-</button>
         } else {
             minusButton = <button onClick={this.decreaseScore}>-</button>
@@ -123,14 +123,6 @@ export const tryoutEvaluation = () => {
             <button >-</button>
             
           </div>
-          <div className="Comments">
-            <form>
-             <label> Comments:</label>
-              <input type="text" />
-
-              <input type="submit" value="Save Comments" />
-             </form>
-             </div>
 
  		<div class="topnav">
  		     <a href="/Notifications" >
