@@ -45,12 +45,14 @@ class EvalGauge extends React.Component{
         if(this.state.score < 0.1){
             minusButton = <button onClick={this.decreaseScore} disabled={true}>-</button>
         } else {
-            minusButton = <button onClick={this.decreaseScore}>-</button>
+            minusButton = <button onClick={this.decreaseScore}>-</button>;
         }
+
+        let gaugeID = "gauge-char" + this.props.idNum ;
         return(
-             <div className="gauges">
-                <h4> Criterion #1 </h4>
-                <GaugeChart id="gauge-chart1"
+             <div className={this.props.name}>
+                 <h4> Criterion #{this.props.idNum}</h4>
+                  <GaugeChart id={gaugeID}
                     nrOfLevels={10}
                     colors={["#fc0f03", "#7de330"]}
                     percent={this.state.score}
@@ -62,34 +64,72 @@ class EvalGauge extends React.Component{
     }
 }
 
-function renderRow(props) {
-  const { index, style } = props;
+class EvalComments extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {comment: ""};
+    }
 
-  return (
-    <ListItem button style={style} key={index}>
-      <ListItemText primary={`AthleteName ${index + 1}`} />
-    </ListItem>
-  );
+    updateComment = (event) => {
+        this.setState({comment: event.target.value});
+    }
+
+    sendComment = (event) => {
+        // Space for API code
+        this.setState({comment: ""});
+    }
+    
+
+    render() {
+             
+        return(
+             <div className = "Comments">
+             <label> Evaluation Criteria:</label>
+            <input type="text" value={this.state.comment} onChange={this.updateComment}/>
+            <input type="button" value="Submit Comment" onClick={this.sendComment}/>
+            </div>
+            );
+    }
 }
 
-renderRow.propTypes = {
-  index: PropTypes.number.isRequired,
-  style: PropTypes.object.isRequired,
-};
 
- function VirtualizedList() {
-  const classes = useStyles();
 
-  return (
-    <div className="somethingElse">
-      <h1>Athlete List</h1>
-      <FixedSizeList height={600} width={300} itemSize={46} itemCount={200}>
-        {renderRow}
-      </FixedSizeList>
-        </div>
+
+
+class AthleteList extends React.Component{
+
+   constructor(props){
+        super(props);
+        this.state = {index: 0, name: ''};
+    }
+
+    buttonClicked = (event) => {
+      //space for API Call
+        this.setState({index: this.state.index});
+        let message = "Athlete" + event.target.key
+        console.log(message);
+    }
+
+
+    render(){
+          const rowComponent = ({ index, style }) => (
+            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
+             <ListItemText primary={`AthleteName ${index +1}`} />
+          </ListItem>
+);
+        return (
+          <div className="somethingElse">
+             <h1>Athlete List</h1>
+            <FixedSizeList height={600} width={300} itemSize={46} itemCount={200}>
+             {rowComponent}
+        </FixedSizeList>
+         </div>
   );
-}
+    }
 
+
+
+}
 
  
 export const tryoutEvaluation = () => {
@@ -97,32 +137,13 @@ export const tryoutEvaluation = () => {
        <div>
        <img src={smallLogo} className="icon" alt="small_logo" />
        <img src={logo} className="bg_lower" alt="logo" />		 
-       <VirtualizedList/>
+       <AthleteList/>
 
-            <EvalGauge />
-
-              <div className="gauges2">
-               <h4> Criterion #2 </h4>
-                 <GaugeChart id="gauge-chart2" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-            <button>+</button>
-            <button>-</button>
-            
-          </div>
-           <div className="gauges3">
-               <h4> Criterion #3 </h4>
-                 <GaugeChart id="gauge-chart3" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-            <button>+</button>
-            <button >-</button>
-            
-          </div>
+            <EvalGauge name="gauges" idNum="1" />
+            <EvalGauge name="gauges2" idNum="2" />
+            <EvalGauge name="gauges3" idNum="3" />
+            <EvalComments/>
+           
 
  		<div class="topnav">
  		     <a href="/Notifications" >
