@@ -37,20 +37,22 @@ class EvalGauge extends React.Component{
     render() {
         let plusButton;
         let minusButton;
-        if(this.state.score === 1){
+        if(this.state.score >0.9){
             plusButton = <button onClick={this.increaseScore} disabled={true}>+</button>
         } else {
             plusButton = <button onClick={this.increaseScore}>+</button>
         }
-        if(this.state.score === 0){
+        if(this.state.score < 0.1){
             minusButton = <button onClick={this.decreaseScore} disabled={true}>-</button>
         } else {
-            minusButton = <button onClick={this.decreaseScore}>-</button>
+            minusButton = <button onClick={this.decreaseScore}>-</button>;
         }
+
+        let gaugeID = "gauge-char" + this.props.idNum ;
         return(
-             <div className="gauges">
-                <h4> Criterion #1 </h4>
-                <GaugeChart id="gauge-chart1"
+             <div className={this.props.name}>
+                 <h4> Criterion #{this.props.idNum}</h4>
+                  <GaugeChart id={gaugeID}
                     nrOfLevels={10}
                     colors={["#fc0f03", "#7de330"]}
                     percent={this.state.score}
@@ -61,6 +63,38 @@ class EvalGauge extends React.Component{
             );
     }
 }
+
+class EvalComments extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {comment: ""};
+    }
+
+    updateComment = (event) => {
+        this.setState({comment: event.target.value});
+    }
+
+    sendComment = (event) => {
+        // Space for API code
+        this.setState({comment: ""});
+    }
+    
+
+    render() {
+             
+        return(
+             <div className = "Comments">
+             <label> Evaluation Criteria:</label>
+            <input type="text" value={this.state.comment} onChange={this.updateComment}/>
+            <input type="button" value="Submit Comment" onClick={this.sendComment}/>
+            </div>
+            );
+    }
+}
+
+
+
+
 
 function renderRow(props) {
   const { index, style } = props;
@@ -99,38 +133,12 @@ export const tryoutEvaluation = () => {
        <img src={logo} className="bg_lower" alt="logo" />		 
        <VirtualizedList/>
 
-            <EvalGauge />
+            <EvalGauge name="gauges" idNum="1" />
+            <EvalGauge name="gauges2" idNum="2" />
+            <EvalGauge name="gauges3" idNum="3" />
+            <EvalComments/>
+           
 
-              <div className="gauges2">
-               <h4> Criterion #2 </h4>
-                 <GaugeChart id="gauge-chart2" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-            <button>+</button>
-            <button>-</button>
-            
-          </div>
-           <div className="gauges3">
-               <h4> Criterion #3 </h4>
-                 <GaugeChart id="gauge-chart3" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-            <button>+</button>
-            <button >-</button>
-            
-          </div>
-          <div className="Comments">
-            <form>
-             <label> Comments:</label>
-              <input type="text" />
-
-              <input type="submit" value="Save Comments" />
-             </form>
-             </div>
 
  		<div class="topnav">
  		     <a href="/Notifications" >
