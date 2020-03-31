@@ -12,7 +12,7 @@ import logo from './DreamTeamLogo.PNG';
 import {Home} from './pages/Home';
 import {About} from './pages/About';
 import {SignInForm} from './pages/Signin';
-import {Signup} from './pages/Signup';
+import {SignUpForm} from './pages/Signup';
 import {Findatryout} from './pages/Findatryout';
 import {UserDashboard} from './pages/userDashboard'
 import {createATryout} from './pages/createatryout'
@@ -60,9 +60,9 @@ function App() {
               <Route exact path= "/" component={Home}/>
               <Route exact path= "/About" component={About}/>
               <Route exact path= "/SignIn" render={(props) => <SignInForm completeLogin={completeLogin} />} />
-              <Route exact path= "/SignUp" component={Signup}/>
+              <Route exact path= "/SignUp" component={SignUpForm} />
               <Route exact path= "/FindATryout" component={Findatryout}/>
-              <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} />} />
+              <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateaTryout" component={createATryout}/>
               <Route exact path= "/BuildTeam" component={buildTeam}/>
               <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
