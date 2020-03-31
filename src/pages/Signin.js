@@ -34,7 +34,7 @@ class SignInForm extends React.Component {
 	render() {
 		if (this.state.userID){
 			return (
-				<Redirect to={'/dashboard/' + this.state.userID}/>
+				<Redirect to={'/user'}/>
 			);
 		}
 		return (

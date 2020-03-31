@@ -20,6 +20,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+class EvalGauge extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {score: 0.5};
+    }
+
+    increaseScore = (event) => {
+        this.setState({score: this.state.score + 0.1});
+    }
+
+    decreaseScore = (event) => {
+        this.setState({score: this.state.score - 0.1});
+    }
+
+    render() {
+        let plusButton;
+        let minusButton;
+        if(this.state.score === 1){
+            plusButton = <button onClick={this.increaseScore} disabled={true}>+</button>
+        } else {
+            plusButton = <button onClick={this.increaseScore}>+</button>
+        }
+        if(this.state.score === 0){
+            minusButton = <button onClick={this.decreaseScore} disabled={true}>-</button>
+        } else {
+            minusButton = <button onClick={this.decreaseScore}>-</button>
+        }
+        return(
+             <div className="gauges">
+                <h4> Criterion #1 </h4>
+                <GaugeChart id="gauge-chart1"
+                    nrOfLevels={10}
+                    colors={["#fc0f03", "#7de330"]}
+                    percent={this.state.score}
+                />
+                 {minusButton}
+                 {plusButton}
+             </div>
+            );
+    }
+}
+
 function renderRow(props) {
   const { index, style } = props;
 
@@ -57,16 +99,7 @@ export const tryoutEvaluation = () => {
        <img src={logo} className="bg_lower" alt="logo" />		 
        <VirtualizedList/>
 
-       <div className="gauges">
-       <h4> Criterion #1 </h4>
-           <GaugeChart id="gauge-chart1" 
-              nrOfLevels={20} 
-              colors={["#fc0f03", "#7de330"]} 
-              percent={0.3} 
-            />
-            <button>+</button>
-            <button >-</button>
-            </div>
+            <EvalGauge />
 
               <div className="gauges2">
                <h4> Criterion #2 </h4>
@@ -76,7 +109,7 @@ export const tryoutEvaluation = () => {
                      percent={0.3} 
             />
             <button>+</button>
-            <button >-</button>
+            <button>-</button>
             
           </div>
            <div className="gauges3">
