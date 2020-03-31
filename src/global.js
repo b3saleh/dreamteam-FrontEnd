@@ -13,7 +13,7 @@ export const GlobalStyles = createGlobalStyle`
     justify-content: center;
     align-items: center;
     background: #000000;
-    color: ${({ theme }) => theme.primaryLight};
+    color:#ffde59;
     height: 100vh;
     text-rendering: optimizeLegibility;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -36,6 +36,15 @@ export const GlobalStyles = createGlobalStyle`
     width: 10rem;
     opacity: 0.5;
   }
+
+
+
+  icon{
+    border-radius: 5px;    
+    top: 10%;
+    left: 10px;
+  }
+
   div {
     text-align: center;
   }
