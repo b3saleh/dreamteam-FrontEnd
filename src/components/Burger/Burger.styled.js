@@ -30,6 +30,7 @@ export const StyledBurger = styled.button`
 
     :first-child {
       transform: ${({ open }) => open ? 'rotate(45deg)' : 'rotate(0)'};
+      
     }
 
     :nth-child(2) {
