@@ -96,34 +96,40 @@ class EvalComments extends React.Component{
 
 
 
-function renderRow(props) {
-  const { index, style } = props;
+class AthleteList extends React.Component{
 
-  return (
-    <ListItem button style={style} key={index}>
-      <ListItemText primary={`AthleteName ${index + 1}`} />
-    </ListItem>
+   constructor(props){
+        super(props);
+        this.state = {index: 0, name: ''};
+    }
+
+    buttonClicked = (event) => {
+      //space for API Call
+        this.setState({index: this.state.index});
+        let message = "Athlete" + event.target.key
+        console.log(message);
+    }
+
+
+    render(){
+          const rowComponent = ({ index, style }) => (
+            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
+             <ListItemText primary={`AthleteName ${index +1}`} />
+          </ListItem>
+);
+        return (
+          <div className="somethingElse">
+             <h1>Athlete List</h1>
+            <FixedSizeList height={600} width={300} itemSize={46} itemCount={200}>
+             {rowComponent}
+        </FixedSizeList>
+         </div>
   );
+    }
+
+
+
 }
-
-renderRow.propTypes = {
-  index: PropTypes.number.isRequired,
-  style: PropTypes.object.isRequired,
-};
-
- function VirtualizedList() {
-  const classes = useStyles();
-
-  return (
-    <div className="somethingElse">
-      <h1>Athlete List</h1>
-      <FixedSizeList height={600} width={300} itemSize={46} itemCount={200}>
-        {renderRow}
-      </FixedSizeList>
-        </div>
-  );
-}
-
 
  
 export const tryoutEvaluation = () => {
@@ -131,7 +137,7 @@ export const tryoutEvaluation = () => {
        <div>
        <img src={smallLogo} className="icon" alt="small_logo" />
        <img src={logo} className="bg_lower" alt="logo" />		 
-       <VirtualizedList/>
+       <AthleteList/>
 
             <EvalGauge name="gauges" idNum="1" />
             <EvalGauge name="gauges2" idNum="2" />
