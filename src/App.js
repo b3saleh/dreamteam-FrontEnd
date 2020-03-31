@@ -22,6 +22,7 @@ import {NotFound} from './pages/NotFound';
 
 function App() {
   const [open, setOpen] = useState(false);
+  const [userFirstName, setUserFirstName] = useState("Ben");
   const node = useRef();
   useOnClickOutside(node, () => setOpen(false));
 
@@ -41,7 +42,7 @@ function App() {
               <Route exact path= "/SignIn" component={Signin}/>
               <Route exact path= "/SignUp" component={Signup}/>
               <Route exact path= "/FindATryout" component={Findatryout}/>
-              <Route exact path= "/dashboard/:id" component={Dashboard}/>
+              <Route exact path= "/dashboard" component={Dashboard} userFirstName={userFirstName}/>
               <Route component={NotFound} />
 
             </Switch>
