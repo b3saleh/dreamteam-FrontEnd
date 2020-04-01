@@ -1,7 +1,8 @@
 import React from 'react';
-import smallLogo from '../DreamTeamLogo_small.PNG'
 import { GlobalStyles } from '../global';
 import logo from '../DreamTeamLogo.PNG';
+import smallLogo from '../DreamTeamLogo_small.PNG';
+import { TopNav } from '../components/TopNav';
  
 class UserDashboard extends React.Component {
 	render(){
@@ -13,21 +14,7 @@ class UserDashboard extends React.Component {
 				<h1>Active Tryouts for {this.props.userFirstName}</h1>
 				</div>
 
-			<div class="topnav">
-				 <a href="/Notifications" >
-					Notifications
-				 </a>
-				<a href="/MyTeams" >
-					Teams
-				 </a>
-				 <a href="/CreateATryout" >
-					Create A Tryout
-				 </a>
-				 <a href="/Profile" >
-					Profile
-				 </a>
-
-				</div>
+			<TopNav />
 
 
 		   </div>

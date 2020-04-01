@@ -39,6 +39,12 @@ class SignUpForm extends React.Component {
 		if(this.state.createSuccess){
 			return <Redirect to={'/Signin'} />
 		}
+		let btn = "";
+		if(this.state.firstName && this.state.lastName && this.state.email && this.state.username && this.state.password && this.state.password === this.state.pwdConfirmation){
+			btn = <input type="button" value="Sign Up" onClick={this.runQuery} />
+		} else {
+			btn = <input type="button" value="Incomplete" onClick={this.runQuery} disabled={true}/>
+		}
 		return (
 		   <div>
 			<img src={logo} className="bg" alt="logo" />
@@ -57,7 +63,7 @@ class SignUpForm extends React.Component {
 					 <br/>
 					 <input type="password" id="pwdConfirmation" value={this.state.pwdConfirmation} onChange={this.changeAttribute} placeholder= "Confirm Password" />
 					 <br/>
-					 <input type="button" value="Sign Up" onClick={this.runQuery} />
+					 {btn}
 
 					</form>
 

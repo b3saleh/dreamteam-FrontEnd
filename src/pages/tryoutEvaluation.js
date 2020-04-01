@@ -7,7 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
-import GaugeChart from 'react-gauge-chart'
+import GaugeChart from 'react-gauge-chart';
+import {TopNav} from '../components/TopNav';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -145,21 +146,7 @@ export const tryoutEvaluation = () => {
             <EvalComments/>
            
 
- 		<div class="topnav">
- 		     <a href="/Notifications" >
-        		Notifications
-       		 </a>
- 			<a href="/MyTeams" >
-        		Teams
-       		 </a>
-       		 <a href="/CreateATryout" >
-        		Create A Tryout
-       		 </a>
-       		 <a href="/Profile" >
-        		Profile
-       		 </a>
-
-       		</div>
+ 		<TopNav/>
 
 
        </div>
