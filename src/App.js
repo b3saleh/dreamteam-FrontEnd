@@ -25,8 +25,8 @@ import {urlAPI} from "./Constants";
 
 function App() {
   const [open, setOpen] = useState(false);
-  const [userID, setUserID] = useState(0);
-  const [userFirstName, setUserFirstName] = useState("Unknown User");
+  const [userID, setUserID] = useState(localStorage.getItem('userID') || 0);
+  const [userFirstName, setUserFirstName] = useState(localStorage.getItem('firstName') || "Unknown User");
   const [username, setUsername] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const node = useRef();
@@ -35,12 +35,14 @@ function App() {
 
   function completeLogin(returnedID) {
     setUserID(returnedID);
+    localStorage.setItem('userID', returnedID);
     const getUserUrl = urlAPI + "getUserInfo/?userID=" + returnedID;
 		fetch(getUserUrl)
 			.then(res => res.json())
 			.then(
 				(result) => {
 					setUserFirstName(result.firstName);
+                    localStorage.setItem('firstName', result.firstName);
 				},
 				(error) => {
 				});
@@ -63,7 +65,7 @@ function App() {
               <Route exact path= "/SignUp" component={SignUpForm} />
               <Route exact path= "/FindATryout" component={Findatryout}/>
               <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
-              <Route exact path= "/CreateaTryout" component={CreateATryout}/>
+              <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
               <Route exact path= "/BuildTeam" component={buildTeam}/>
               <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
               <Route component={NotFound} />
