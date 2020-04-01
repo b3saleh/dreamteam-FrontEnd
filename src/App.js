@@ -73,10 +73,7 @@ function App() {
               <Route exact path= "/TryoutEvaluation" render={(props) => <TryoutEvaluation tryoutID={3} /> }/>
               <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
-
-           
               <Route component={NotFound} />
-
             </Switch>
           </Router>
           
