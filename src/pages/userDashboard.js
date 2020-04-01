@@ -34,7 +34,7 @@ class UserDashboard extends React.Component {
 			);
 		return (
 			<>
-				{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/tryoutEvaluation'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} onClick={this.setTryoutID}>{tryout}</Link></li>)}
+				{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/TryoutDashboard'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} onClick={this.setTryoutID}>{tryout}</Link></li>)}
 			</>
 		);
 	}

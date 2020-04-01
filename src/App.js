@@ -21,6 +21,7 @@ import {TryoutEvaluation} from './pages/tryoutEvaluation'
 import {NotFound} from './pages/NotFound';
 import {tryoutSignUp} from './pages/tryoutSignUp'
 import {signUpSuccess} from './pages/signupSuccessful'
+import {TryoutDashboard} from './pages/tryoutDashboard'
 import {urlAPI} from "./Constants";
 
 
@@ -73,6 +74,7 @@ function App() {
               <Route exact path= "/TryoutEvaluation" render={(props) => <TryoutEvaluation tryoutID={3} /> }/>
               <Route exact path= "/TryoutSignUp" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
+              <Route exact path= "/TryoutDashboard" render={(props) => <TryoutDashboard tryoutID={3} /> }/>
 
            
               <Route component={NotFound} />
