@@ -17,7 +17,7 @@ import {Findatryout} from './pages/Findatryout';
 import {UserDashboard} from './pages/userDashboard'
 import {CreateATryout} from './pages/createatryout'
 import {buildTeam} from './pages/buildTeam'
-import {tryoutEvaluation} from './pages/tryoutEvaluation'
+import {TryoutEvaluation} from './pages/tryoutEvaluation'
 import {NotFound} from './pages/NotFound';
 import {urlAPI} from "./Constants";
 
@@ -67,7 +67,7 @@ function App() {
               <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
               <Route exact path= "/BuildTeam" component={buildTeam}/>
-              <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
+              <Route exact path= "/TryoutEvaluation" render={(props) => <TryoutEvaluation tryoutID={3} /> }/>
               <Route component={NotFound} />
 
             </Switch>

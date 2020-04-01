@@ -134,24 +134,28 @@ class AthleteList extends React.Component{
 }
 
  
-export const tryoutEvaluation = () => {
-    return (
-       <div>
-       <img src={smallLogo} className="icon" alt="small_logo" />
-       <img src={logo} className="bg_lower" alt="logo" />		 
-       <AthleteList/>
-
-            <EvalGauge name="gauges" idNum="1" />
-            <EvalGauge name="gauges2" idNum="2" />
-            <EvalGauge name="gauges3" idNum="3" />
-            <EvalComments/>
-           
-
- 		<TopNav/>
+class TryoutEvaluation extends React.Component {
+    render() {
+        return (
+           <div>
+           <img src={smallLogo} className="icon" alt="small_logo" />
+           <img src={logo} className="bg_lower" alt="logo" />
+           <AthleteList/>
 
 
-       </div>
-    );
+                <EvalGauge name="gauges" idNum="1" />
+                <EvalGauge name="gauges2" idNum="2" />
+                <EvalGauge name="gauges3" idNum="3" />
+                <EvalComments/>
+
+
+            <TopNav/>
+
+
+           </div>
+        );
+    }
+
 }
  
-export default tryoutEvaluation;
+export { TryoutEvaluation };
