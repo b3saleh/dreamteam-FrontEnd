@@ -50,6 +50,16 @@
   opacity: 0.3;
   }
 
+  .bg_lower_test {
+  top:90px;
+  position: absolute;
+  left:1px;
+  height: 100vmin;
+  width: 170vmin;
+  opacity: 1;
+  background: white;
+  }
+
   .topnav {
   
   overflow: hidden;
@@ -84,6 +94,15 @@
 
 }
 
+.checkBox{
+  color:white;
+}
+
+.team_list{
+  background:  black;
+  color: rgba(255,222,89,0.95)
+}
+
 .athleteList{
   float:left;
   position:absolute;
@@ -94,7 +113,38 @@
 
 
 }
+.rightList{
+  position: absolute;
+  right:-15px;
+  top: 100px;
 
+}
+
+.addPlayer{
+  position: absolute;
+  bottom:-160px;
+  color:black;
+  background-color: #ffde59;
+
+}
+
+.removePlayer{
+  position: absolute;
+  bottom:-170px;
+
+}
+
+.clrList{
+  position: absolute;
+  bottom:-180px;
+
+}
+.leftList{
+  position: absolute;
+  left:10px;
+  top: 100px;
+
+}
 .button{
   border-spacing: 30px;
 }
