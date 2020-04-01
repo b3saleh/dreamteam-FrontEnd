@@ -76,79 +76,7 @@ class EvalGauge extends React.Component{
 
 
 
-class CurrTeamList extends React.Component{
 
-   constructor(props){
-    
-        super(props);
-        this.state = {index: 0, name: ''};
-    }
-
-    buttonClicked = (event) => {
-      //space for API Call
-        this.setState({index: this.state.index});
-        let message = "Athlete" + event.target.key
-        console.log(message);
-    }
-
-
-    render(){
-          const rowComponent = ({ index, style }) => (
-            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
-              
-             <ListItemText primary={`AthleteName ${index +1}`} />
-          </ListItem>
-);
-        return (
-          <div className="somethingElse">
-             <h1>Current Team</h1>
-            <FixedSizeList height={600} width={250} itemSize={46} itemCount={10}>
-             {rowComponent}
-        </FixedSizeList>
-         </div>
-  );
-    }
-
-
-
-}
-
-
-class AthleteList extends React.Component{
-
-   constructor(props){
-    
-        super(props);
-        this.state = {index: 0, name: ''};
-    }
-
-    buttonClicked = (event) => {
-      //space for API Call
-        this.setState({index: this.state.index});
-        let message = "Athlete" + event.target.key
-        console.log(message);
-    }
-
-
-    render(){
-          const rowComponent = ({ index, style }) => (
-            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
-             <ListItemText primary={`AthleteName ${index +1}`} />
-          </ListItem>
-);
-        return (
-          <div className="athleteList">
-             <h1>Athletes</h1>
-            <FixedSizeList height={600} width={250} itemSize={46} itemCount={200}>
-             {rowComponent}
-        </FixedSizeList>
-         </div>
-  );
-    }
-
-
-
-}
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -161,8 +89,8 @@ function intersection(a, b) {
  function TransferList() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2, 3]);
-  const [right, setRight] = React.useState([4, 5, 6, 7]);
+  const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([0,1,2,3,4,5,6,7]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);

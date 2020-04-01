@@ -20,7 +20,7 @@ import {buildTeam} from './pages/buildTeam'
 import {tryoutEvaluation} from './pages/tryoutEvaluation'
 import {NotFound} from './pages/NotFound';
 import {urlAPI} from "./Constants";
-import {buildTeamTest} from './pages/buildTeamTest'
+
 
 
 
@@ -66,7 +66,6 @@ function App() {
               <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateaTryout" component={CreateATryout}/>
               <Route exact path= "/BuildTeam" component={buildTeam}/>
-              <Route exact path= "/BuildTeamTest" component={buildTeamTest}/>
               <Route exact path= "/TryoutEvaluation" component={tryoutEvaluation}/>
               <Route component={NotFound} />
 
