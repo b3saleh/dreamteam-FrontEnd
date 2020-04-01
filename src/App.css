@@ -84,6 +84,17 @@
 
 }
 
+.athleteList{
+  float:left;
+  position:absolute;
+  right:0px;
+  top:100px;
+  text-rendering: optimizeLegibility;
+  background: black;
+
+
+}
+
 .button{
   border-spacing: 30px;
 }
@@ -117,6 +128,38 @@
   padding: 10px 10px;
  background: black;
 }
+
+.gauges-view{
+    
+  position:absolute;
+  text-rendering: optimizeLegibility;
+  top: 22%;
+  left: 19%;
+  padding: 0;
+ background: black;
+
+}
+
+.gauges-view2{
+    
+  position:absolute;
+  text-rendering: optimizeLegibility;
+  top: 22%;
+  left: 38%;
+  padding:0;
+ background: black;
+}
+
+.gauges-view3{
+    
+  position:absolute;
+  text-rendering: optimizeLegibility;
+  top: 22%;
+  left: 57%;
+  padding:0;
+ background: black;
+}
+
 
 .Comments {
   position: absolute;
