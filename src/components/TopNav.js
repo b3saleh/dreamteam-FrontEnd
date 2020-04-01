@@ -19,7 +19,7 @@ class TopNav extends React.Component {
             <a href="/CreateATryout" >
                 Create A Tryout
             </a>
-            < a href = "/Profile">
+            < a href = "/user">
                 Profile
             </a>
             </div>
