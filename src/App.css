@@ -237,12 +237,44 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width:400px;
+  
   
   transform: translate(-50%, -50%);
   background-color: rgba(0,0,0,0.8);
   color: white;
   padding-top: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+  .text-block-info {
+  position: absolute;
+  top:120px;
+  
+  left: 10px;
+  
+  
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+.evalButton{
+  
+}
+ .text-block-players {
+  position: absolute;
+  top:120px;
+  width:500px;
+  
+  left: 35%;
+  
+  
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 30px;
@@ -265,7 +297,7 @@ input[type=text], select, textarea {
   border-radius: 4px; /* Rounded borders */
   box-sizing: border-box; /* Make sure that padding and width stays in place */
   margin-top: 6px; /* Add a top margin */
-  margin-bottom: 16px; /* Bottom margin */
+  margin-bottom: 10px; /* Bottom margin */
   resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 
@@ -299,7 +331,11 @@ input[type=button] {
   border-radius: 4px;
   cursor: pointer;
 }
+
 input[type=datetime-local] {
+  position:relative;
+  float:left;
+  display: inline;  
   width: 100%; 
   padding: 12px;  
   border: 1px solid #ccc; 
@@ -307,7 +343,7 @@ input[type=datetime-local] {
   box-sizing: border-box; 
   margin-top: 6px; /* Add a top margin */
   margin-bottom: 16px; 
-  resize: vertical 
+   
 }
 input[type=submit] {
   font-family:"helvetica";
