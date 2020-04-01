@@ -20,77 +20,123 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function renderRow(props) {
-  const { index, style } = props;
+class EvalGauge extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {score: 0.5};
+    }
 
-  return (
-    <ListItem button style={style} key={index}>
-      <ListItemText primary={`AthleteName ${index + 1}`} />
-    </ListItem>
-  );
+   
+
+    render() {
+        
+
+        let gaugeID = "gauge-char" + this.props.idNum ;
+        return(
+             <div className={this.props.name}>
+                 <h4> Criterion #{this.props.idNum}</h4>
+                  <GaugeChart id={gaugeID}
+                    nrOfLevels={10}
+                    colors={["#fc0f03", "#7de330"]}
+                    percent={this.state.score}
+                />
+                 
+             </div>
+            );
+    }
 }
 
-renderRow.propTypes = {
-  index: PropTypes.number.isRequired,
-  style: PropTypes.object.isRequired,
-};
 
- function VirtualizedList() {
-  const classes = useStyles();
 
-  return (
-    <div className="somethingElse">
-      <h1>Current Team</h1>
-      <FixedSizeList height={600} width={300} itemSize={46} itemCount={10}>
-        {renderRow}
-      </FixedSizeList>
-        </div>
+
+
+class CurrTeamList extends React.Component{
+
+   constructor(props){
+    
+        super(props);
+        this.state = {index: 0, name: ''};
+    }
+
+    buttonClicked = (event) => {
+      //space for API Call
+        this.setState({index: this.state.index});
+        let message = "Athlete" + event.target.key
+        console.log(message);
+    }
+
+
+    render(){
+          const rowComponent = ({ index, style }) => (
+            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
+             <ListItemText primary={`AthleteName ${index +1}`} />
+          </ListItem>
+);
+        return (
+          <div className="somethingElse">
+             <h1>Current Team</h1>
+            <FixedSizeList height={600} width={250} itemSize={46} itemCount={10}>
+             {rowComponent}
+        </FixedSizeList>
+         </div>
   );
+    }
+
+
+
 }
 
+
+class AthleteList extends React.Component{
+
+   constructor(props){
+    
+        super(props);
+        this.state = {index: 0, name: ''};
+    }
+
+    buttonClicked = (event) => {
+      //space for API Call
+        this.setState({index: this.state.index});
+        let message = "Athlete" + event.target.key
+        console.log(message);
+    }
+
+
+    render(){
+          const rowComponent = ({ index, style }) => (
+            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
+             <ListItemText primary={`AthleteName ${index +1}`} />
+          </ListItem>
+);
+        return (
+          <div className="athleteList">
+             <h1>Athletes</h1>
+            <FixedSizeList height={600} width={250} itemSize={46} itemCount={200}>
+             {rowComponent}
+        </FixedSizeList>
+         </div>
+  );
+    }
+
+
+
+}
 
  
 export const buildTeam = () => {
     return (
        <div>
        <img src={smallLogo} className="icon" alt="small_logo" />
-       <img src={logo} className="bg_lower" alt="logo" />  
-       <div className="pageTitle">
-        <h1> Team Strength </h1> 
-        </div> 
-       <VirtualizedList/>
+       <img src={logo} className="bg_lower" alt="logo" />    
+       <CurrTeamList/>
+       <AthleteList/>
 
-       <div className="gauges">
-       <h4> Criterion #1 </h4>
-           <GaugeChart id="gauge-chart1" 
-              nrOfLevels={20} 
-              colors={["#fc0f03", "#7de330"]} 
-              percent={0.3} 
-            />
+            <EvalGauge name="gauges-view" idNum="1" />
+            <EvalGauge name="gauges-view2" idNum="2" />
+            <EvalGauge name="gauges-view3" idNum="3" />
             
-            </div>
-
-              <div className="gauges2">
-               <h4> Criterion #2 </h4>
-                 <GaugeChart id="gauge-chart2" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-        
-            
-          </div>
-           <div className="gauges3">
-               <h4> Criterion #3 </h4>
-                 <GaugeChart id="gauge-chart3" 
-                     nrOfLevels={20} 
-                    colors={["#fc0f03", "#7de330"]} 
-                     percent={0.3} 
-            />
-        
-            
-          </div>
- 
+           
 
     <div class="topnav">
          <a href="/Notifications" >

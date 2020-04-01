@@ -99,6 +99,7 @@ class EvalComments extends React.Component{
 class AthleteList extends React.Component{
 
    constructor(props){
+    
         super(props);
         this.state = {index: 0, name: ''};
     }
