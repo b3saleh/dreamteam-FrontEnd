@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { FixedSizeList } from 'react-window';
+import List from '@material-ui/core/List';
 import GaugeChart from 'react-gauge-chart';
 import {TopNav} from '../components/TopNav';
 import {urlAPI} from "../Constants";
@@ -97,40 +97,57 @@ class EvalComments extends React.Component{
 
 
 
-class AthleteList extends React.Component{
+class AthleteList extends React.Component {
 
-   constructor(props){
-    
+    constructor(props) {
         super(props);
-        this.state = {index: 0, name: ''};
+        this.state = {index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0};
     }
 
     buttonClicked = (event) => {
-      //space for API Call
-        this.setState({index: this.state.index});
-        let message = "Athlete" + event.target.key
+        //space for API Call
+        this.setState({index: this.state.index, selected: event.target.id});
+        let message = "Athlete" + event.target.id
         console.log(message);
     }
 
+    PlayerList = () => {
+        const getListUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getListUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({playerFirstNames: result.playerFirstNames})
+                    this.setState({playerLastNames: result.playerLastNames})
+                    this.setState({playerIDs: result.playerIDs})
+                    this.setState({selected: this.state.selected || result.playerIDs[0]})
+                },
+                (error) => {
+                    return <>Error with API call: {getListUrl}</>;
+                }
+            );
 
-    render(){
-          const rowComponent = ({ index, style }) => (
-            <ListItem button style={style} key={index} onClick={this.buttonClicked}>
-             <ListItemText primary={`AthleteName ${index +1}`} />
-          </ListItem>
-);
-        return (
-          <div className="somethingElse">
-             <h1>Athlete List</h1>
-            <FixedSizeList height={600} width={300} itemSize={46} itemCount={200}>
-             {rowComponent}
-        </FixedSizeList>
-         </div>
-  );
+            return (
+                <List>
+                    {this.state.playerIDs.map(
+                            (id) =>
+                                <ListItem button selected={this.state.selected === id} onClick={this.buttonClicked} key={id} id={id}>
+                                    {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                </ListItem>
+                        )
+                    }
+                </List>
+            );
     }
 
-
-
+    render() {
+        return (
+            <div className="somethingElse">
+                <h1>Athlete List</h1>
+                <this.PlayerList/>
+            </div>
+        );
+    }
 }
 
  
@@ -173,9 +190,7 @@ class TryoutEvaluation extends React.Component {
            <AthleteList/>
 
                 <div className="evalGauges">
-                    <EvalGauge name="Athleticism" />
-                    <EvalGauge name="Attitude" />
-                    <EvalGauge name="GameSense" />
+                    <this.CriteriaList/>
                 </div>
                 <EvalComments/>
 
