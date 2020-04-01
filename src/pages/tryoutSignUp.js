@@ -21,7 +21,7 @@ class tryoutSignUp extends React.Component {
 	}
 
 	createPlayer = (event) => {
-        const createPlayerUrl = urlAPI + "createPlayer/?tryoutID=" + this.props.tryoutID + "&firstName=" + this.state.firstName + "&lastName=" + this.state.lastName + "&email" + this.state.email
+        const createPlayerUrl = urlAPI + "createPlayer/?tryoutID=" + this.props.match.params.tryoutID + "&firstName=" + this.state.firstName + "&lastName=" + this.state.lastName + "&email=" + this.state.email
         fetch(createPlayerUrl, {method: 'POST'})
 			.then(res => res.json())
 			.then(
@@ -37,6 +37,7 @@ class tryoutSignUp extends React.Component {
     }
 
     render(){
+        console.log("This Tryout is " + this.props.match.params.tryoutID);
         if(this.state.createSuccess){
 			return <Redirect to={'/SignupSuccessful'} />
 		}
