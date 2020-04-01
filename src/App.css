@@ -152,7 +152,7 @@
 .evalGauges{
   position:absolute;
   top: 22%;
-  left: 30%;
+  left: 25%;
   width:80%;
 }
 
@@ -198,8 +198,9 @@
 
 .Comments {
   position: absolute;
+ 
   bottom: 20%;
-  left: 30%;
+  left: 25%;
   background:black;
   padding: 14px 16px;
 
