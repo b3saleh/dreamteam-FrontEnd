@@ -17,14 +17,9 @@ import List from '@material-ui/core/List';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
-    float:"right",
-    left:0,
-    height: '100%',
-    maxWidth: 300,
-    backgroundColor: 'black',
+    margin:'auto',
   },
-  paper: {
+   paper: {
     width: 200,
     height: 'auto',
     overflow: 'auto',
@@ -43,40 +38,8 @@ const useStyles = makeStyles((theme) => ({
     
     
   },
+
 }));
-
-
-class EvalGauge extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {score: 0.5};
-    }
-
-   
-
-    render() {
-        
-
-        let gaugeID = "gauge-char" + this.props.idNum ;
-        return(
-             <div className={this.props.name}>
-                 <h4> Criterion #{this.props.idNum}</h4>
-                  <GaugeChart id={gaugeID}
-                    nrOfLevels={10}
-                    colors={["#fc0f03", "#7de330"]}
-                    percent={this.state.score}
-                />
-                 
-             </div>
-            );
-    }
-}
-
-
-
-
-
-
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -89,8 +52,8 @@ function intersection(a, b) {
  function TransferList() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([]);
-  const [right, setRight] = React.useState([0,1,2,3,4,5,6,7]);
+  const [left, setLeft] = React.useState([0, 1, 2, 3]);
+  const [right, setRight] = React.useState([4, 5, 6, 7]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -169,10 +132,9 @@ function intersection(a, b) {
       <Grid item>
         <Grid container direction="column" alignItems="stretch">
         <Button
-            variant="contained"
+            variant="outlined"
             size="small"
             className="addPlayer"
-            color="white"
             onClick={handleCheckedLeft}
             disabled={rightChecked.length === 0}
             aria-label="move selected left"
@@ -181,8 +143,7 @@ function intersection(a, b) {
           </Button>
          
           <Button
-            variant="contained"
-            color="white"
+            variant="outlined"
             size="small"
             className="removePlayer"
             onClick={handleCheckedRight}
@@ -193,14 +154,14 @@ function intersection(a, b) {
           </Button>
 
            <Button
-            variant="contained"
+            variant="outlined"
             size="small"
             className="clrList"
             onClick={handleAllRight}
             disabled={left.length === 0}
             aria-label="move all right"
           >
-            Clear Team
+            Clear Team List
           </Button>
           
          
@@ -214,19 +175,15 @@ function intersection(a, b) {
 }
 
 
- 
-export const buildTeam = () => {
+export const buildTeamTest = () => {
     return (
        <div>
        <img src={smallLogo} className="icon" alt="small_logo" />
-       <img src={logo} className="bg_lower" alt="logo" />    
-       <TransferList/>
-       
+       <img className="bg_lower_test" alt="logo" /> 
+       <TransferList/>   
 
-            <EvalGauge name="gauges-view" idNum="1" />
-            <EvalGauge name="gauges-view2" idNum="2" />
-            <EvalGauge name="gauges-view3" idNum="3" />
-            
+
+
            
 
     <div class="topnav">
@@ -250,4 +207,4 @@ export const buildTeam = () => {
     );
 }
  
-export default buildTeam;
+export default buildTeamTest;
