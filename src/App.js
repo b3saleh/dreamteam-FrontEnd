@@ -71,7 +71,7 @@ function App() {
               <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
               <Route exact path= "/BuildTeam" component={buildTeam}/>
               <Route exact path= "/TryoutEvaluation" render={(props) => <TryoutEvaluation tryoutID={3} /> }/>
-              <Route exact path= "/TryoutSignUp" component={tryoutSignUp}/>
+              <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
 
            
