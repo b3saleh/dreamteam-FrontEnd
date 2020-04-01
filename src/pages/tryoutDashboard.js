@@ -7,12 +7,12 @@ import {Redirect} from "react-router-dom";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
-
+import {Link} from 'react-router-dom';
 
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0};
+        this.state = {evalClicked: false, tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0};
     }
 
     changeAttribute = (event) => {
@@ -22,6 +22,10 @@ class TryoutDashboard extends React.Component {
 			[fieldName]: value
 		})
 	}
+
+    buttonClicked = (event) => {
+        this.setState({evalClicked: true});
+    }
 
 	createTryout = (event) => {
         const createTryoutUrl = urlAPI + "createTryout/?userID=" + this.props.userID + "&tryoutName=" + this.state.tryoutName + "&criteria=" + this.state.criterion1Name + "&criteria=" + this.state.criterion2Name + "&criteria=" + this.state.criterion3Name
@@ -53,7 +57,7 @@ class TryoutDashboard extends React.Component {
             );
 
             return (
-                <List>
+                <List className="playerList">
                     {this.state.playerIDs.map(
                             (id) =>
                                 <ListItem button selected={this.state.selected === id} onClick={this.buttonClicked} key={id} id={id}>
@@ -66,8 +70,8 @@ class TryoutDashboard extends React.Component {
     }
 
     render(){
-        if(this.state.createSuccess){
-			return <Redirect to={'/user'} />
+        if(this.state.evalClicked){
+			return <Redirect to={'/tryoutEvaluation'} />
 		}
         return (
 
@@ -75,14 +79,19 @@ class TryoutDashboard extends React.Component {
             <img src={logo} className="bg_lower" alt="logo"/>
             <TopNav />
 
-            	<div class="text-block-players">
+            	<div className="text-block-players">
             		<h1>List of Players</h1>
             		<this.PlayerList/>
 
-
             	</div>
 
-               <div class="text-block-info">
+                <div className="evalButton">
+                <input type="button" value="Tryout Evaluation" onClick={this.buttonClicked} />
+
+                </div>
+
+
+               <div className="text-block-info">
                     <h1>Tryout Information</h1>
 
                  <form>
@@ -118,7 +127,7 @@ class TryoutDashboard extends React.Component {
                  <br/>
                  <br/>
                  <label> Player Sign Up Form:</label>
-                 <input type="text" value="THIS LINK" id="tryoutLink"  disabled />
+                 <input type="text" value={"http://localhost:3000/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink"  disabled />
 
                  <br/>
 
