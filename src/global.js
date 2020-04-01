@@ -37,8 +37,6 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.5;
   }
 
-
-
   icon{
     border-radius: 5px;    
     top: 10%;

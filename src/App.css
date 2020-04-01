@@ -148,39 +148,24 @@
 .button{
   border-spacing: 30px;
 }
-.gauges{
-    
+
+.evalGauges{
   position:absolute;
-  text-rendering: optimizeLegibility;
   top: 22%;
   left: 30%;
-  padding: 10px 10px;
- background: black;
-
+  width:80%;
 }
 
-.gauges2{
-    
-  position:absolute;
+.gauges{
+  position:relative;
+  float:left;
+  width:30%;
   text-rendering: optimizeLegibility;
-  top: 22%;
-  left: 50%;
   padding: 10px 10px;
- background: black;
-}
-
-.gauges3{
-    
-  position:absolute;
-  text-rendering: optimizeLegibility;
-  top: 22%;
-  left: 70%;
-  padding: 10px 10px;
- background: black;
+  background: black;
 }
 
 .gauges-view{
-    
   position:absolute;
   text-rendering: optimizeLegibility;
   top: 22%;

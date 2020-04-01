@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 import GaugeChart from 'react-gauge-chart';
 import {TopNav} from '../components/TopNav';
+import {urlAPI} from "../Constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,11 +50,10 @@ class EvalGauge extends React.Component{
             minusButton = <button onClick={this.decreaseScore}>-</button>;
         }
 
-        let gaugeID = "gauge-char" + this.props.idNum ;
         return(
-             <div className={this.props.name}>
-                 <h4> Criterion #{this.props.idNum}</h4>
-                  <GaugeChart id={gaugeID}
+             <div className="gauges">
+                 <h4> {this.props.name}</h4>
+                  <GaugeChart id={this.props.name}
                     nrOfLevels={10}
                     colors={["#fc0f03", "#7de330"]}
                     percent={this.state.score}
@@ -135,6 +135,36 @@ class AthleteList extends React.Component{
 
  
 class TryoutEvaluation extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {criteriaNames: []}
+    }
+    CriteriaList = () => {
+        const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getListUrl)
+			.then(
+				res =>
+					res.json()
+			)
+			.then(
+				(result) => {
+					this.setState({criteriaNames: result.criteriaNames})
+				},
+				(error) => {
+					return <>Error with API call: {getListUrl}</>;
+				}
+			);
+		return (
+			<>
+				{
+				    this.state.criteriaNames.map(
+				        ( criterion ) => <EvalGauge name={criterion}/>
+                    )
+				}
+			</>
+		);
+	}
+
     render() {
         return (
            <div>
@@ -142,10 +172,11 @@ class TryoutEvaluation extends React.Component {
            <img src={logo} className="bg_lower" alt="logo" />
            <AthleteList/>
 
-
-                <EvalGauge name="gauges" idNum="1" />
-                <EvalGauge name="gauges2" idNum="2" />
-                <EvalGauge name="gauges3" idNum="3" />
+                <div className="evalGauges">
+                    <EvalGauge name="Athleticism" />
+                    <EvalGauge name="Attitude" />
+                    <EvalGauge name="GameSense" />
+                </div>
                 <EvalComments/>
 
 
