@@ -27,16 +27,18 @@ class tryoutSignUp extends React.Component {
 			.then(
 				(result) => {
 					this.setState({createSuccess: true})
+                    
 				},
 				(error) => {
 					// Code if shit hit the fan
+
 				}
 			);
     }
 
     render(){
         if(this.state.createSuccess){
-			//do something
+			return <Redirect to={'/SignupSuccessful'} />
 		}
         return (
 
@@ -61,7 +63,7 @@ class tryoutSignUp extends React.Component {
                  <input type="text" id="email" value={this.state.email} onChange={this.changeAttribute} />
 
                  <br/>
-                 <input type="button" value="Sign Up" onClick={this.createTryout} />
+                 <input type="button" value="Sign Up" onClick={this.createPlayer} />
 
                  </form>
                </div>
