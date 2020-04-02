@@ -55,6 +55,21 @@ class EvalComments extends React.Component{
     constructor(props){
         super(props);
         this.state = {comment: ""};
+        //DOTHISSSSSSS
+        const getCommentsUrl = urlAPI + "getComments/?playerID=" + localStorage.getItem('currentTryoutID');
+        fetch(getCommentsUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({playerFirstNames: result.playerFirstNames});
+                    this.setState({playerLastNames: result.playerLastNames});
+                    this.setState({playerIDs: result.playerIDs});
+                    this.props.onSelection(result.playerIDs[0]);
+                },
+                (error) => {
+                    return <>Error with API call: {getCommentsUrl}</>;
+                }
+            );
     }
 
     updateComment = (event) => {
@@ -103,6 +118,9 @@ class AthleteList extends React.Component {
                     return <>Error with API call: {getListUrl}</>;
                 }
             );
+
+            
+
 
     }
 

@@ -13,7 +13,7 @@ import DatePicker from 'react-datepicker';
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {criteriaNames: [], evalClicked: false, tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:""};
+        this.state = {criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(
@@ -43,6 +43,21 @@ class TryoutDashboard extends React.Component {
                 }
             );
 
+             const getTeamListUrl = urlAPI + "listTeams/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getTeamListUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({teamNames: result.teamNames})
+                    this.setState({teamIDs: result.teamIDs})
+                   
+                    
+                },
+                (error) => {
+                    return <>Error with API call: {getListUrl}</>;
+                }
+            );
+
     }
 
    changeStartTime = (event) => {
@@ -64,8 +79,8 @@ class TryoutDashboard extends React.Component {
 		})
 	}
 
-    buttonClicked = (event) => {
-        this.setState({evalClicked: true});
+    teamClicked = (event) => {
+        localStorage.setItem("currentTeamID", event.target.id);
     }
 
     /*
@@ -137,7 +152,7 @@ class TryoutDashboard extends React.Component {
             		<List className="playerList">
                     {this.state.playerIDs.map(
                             (id) =>
-                                <ListItem button selected={this.state.selected === id} onClick={this.buttonClicked} key={id} id={id}>
+                                <ListItem selected={this.state.selected === id} key={id} id={id}>
                                     {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
                                 </ListItem>
                         )
@@ -195,6 +210,19 @@ class TryoutDashboard extends React.Component {
 
                  <input type="button" value="Create Team" onClick={this.addTeam} />
                  <br/>
+
+                 <List className="teamList">
+
+                    {this.state.teamIDs.map(
+                            (id) =>
+                                <ListItem key={id}>
+                                    <Link to="/BuildTeam" onClick={this.teamClicked} id={id}>
+                                        {this.state.teamNames[this.state.teamIDs.indexOf(id)] }
+                                    </Link>
+                                </ListItem>
+                        )
+                    }
+                    </List>
 
                </div>
 
