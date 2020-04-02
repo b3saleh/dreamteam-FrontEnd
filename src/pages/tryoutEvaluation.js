@@ -63,6 +63,7 @@ class EvalComments extends React.Component{
 
     sendComment = (event) => {
         // Space for API code
+        
         this.setState({comment: ""});
     }
     
