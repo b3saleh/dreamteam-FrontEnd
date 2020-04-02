@@ -14,6 +14,8 @@ class UserDashboard extends React.Component {
 
 	setTryoutID = (event) => {
 		localStorage.setItem('currentTryoutID', event.target.id);
+		localStorage.setItem('currentTryoutName', event.target.name);
+
 	}
 
 	TryoutList = () => {
@@ -34,7 +36,7 @@ class UserDashboard extends React.Component {
 			);
 		return (
 			<>
-				{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/TryoutDashboard'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} onClick={this.setTryoutID}>{tryout}</Link></li>)}
+				{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/TryoutDashboard'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} name={tryout} onClick={this.setTryoutID}>{tryout}</Link></li>)}
 			</>
 		);
 	}
