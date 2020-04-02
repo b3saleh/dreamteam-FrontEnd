@@ -263,8 +263,9 @@
   .text-block-info {
   position: absolute;
   top:120px;
-  
-  left: 10px;
+  width:30%;
+  left:3%;
+ 
   
   
   background-color: rgba(0,0,0,0.8);
@@ -292,10 +293,11 @@
  .text-block-players {
   position: absolute;
   top:120px;
-  width:300px;
+  width:30%;
   text-align:center;
+  right:3%;
   
-  left: 35%;
+ 
   
   
   background-color: rgba(0,0,0,0.8);
@@ -305,6 +307,24 @@
   padding-right: 30px;
   padding-bottom: 30px;
 }
+
+.tryoutEdit{
+  position: absolute;
+  top:120px;
+  width:30%;
+  left: 35%;
+  
+  
+  
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+
+}
+
 .centered {
   position: absolute;
   top: 50%;

@@ -52,7 +52,7 @@ class tryoutSignUp extends React.Component {
 
 
                  <form>
-                 <label> Tryout Name:</label>
+                 <label> Name:</label>
                  <input type="text" id="firstName" value={this.state.firstName} onChange={this.changeAttribute}/>
 
                  <br/>
