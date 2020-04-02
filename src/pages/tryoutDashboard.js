@@ -8,11 +8,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import {Link} from 'react-router-dom';
+import DatePicker from 'react-datepicker';
 
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {criteriaNames: [], evalClicked: false, tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:new Date() ,endTime:new Date(), executive:""};
+        this.state = {criteriaNames: [], evalClicked: false, tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:""};
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(
@@ -44,16 +45,18 @@ class TryoutDashboard extends React.Component {
 
     }
 
-    onPickDateTime(moment) {
-     this.setState({
-    startTime: moment,
-  })
-}
+   changeStartTime = (event) => {
+             
+       
+        this.setState({
+
+            startTime: event.target.selected
+        })
+    }
 
     changeAttribute = (event) => {
 		const fieldName = event.target.id;
-		const value = event.target.value;
-        
+		const value = event.target.value;       
        
 		this.setState({
 
@@ -65,6 +68,8 @@ class TryoutDashboard extends React.Component {
         this.setState({evalClicked: true});
     }
 
+    /*
+
 	addSession = (event) => {
         console.log(event.target.value)
         const addSessionUrl = urlAPI + "addSession/?tryoutID=" + localStorage.getItem('currentTryoutID') + "&startTime=" + this.state.startTime + "&endTime=" + this.state.endTime + "&location=" + this.state.location; 
@@ -73,13 +78,14 @@ class TryoutDashboard extends React.Component {
 			.then(
 				(result) => {
 					this.setState({createSuccess: true})
-                    console.log("DATE SUBMITTED")
+                    
 				},
 				(error) => {
 					// Code if shit hit the fan
 				}
 			);
     }
+*/
         addExecutive = (event) => {
         const addExecutiveUrl = urlAPI + "addExecs/?tryoutID=" + localStorage.getItem('currentTryoutID') + "&execEmail=" + this.state.executive 
         fetch(addExecutiveUrl, {method: 'POST'})
@@ -94,12 +100,31 @@ class TryoutDashboard extends React.Component {
                 }
             );
     }
+
+        addTeam = (event) => {
+        
+        const addTeamUrl = urlAPI + "createTeam/?tryoutID=" + localStorage.getItem('currentTryoutID') + "&teamName=" + this.state.teamName; 
+        fetch(addTeamUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({createSuccess: true})
+                    console.log("team added")
+                    console.log(this.state.teamName)
+                },
+                (error) => {
+                    // Code if shit hit the fan
+                }
+            );
+    }
         
 
     render(){
         if(this.state.evalClicked){
 			return <Redirect to={'/tryoutEvaluation'} />
 		}
+
+       
 
         return (
 
@@ -154,12 +179,34 @@ class TryoutDashboard extends React.Component {
 
                  </form>
                </div>
+               <div className="addExec">
+                <h1>Executives</h1>
+                <label> Additional Executive (Email):</label>
+                 <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
+
+                 <input type="button" value="Add Executive" onClick={this.addExecutive} />
+                 <br/>
+
+               </div>
+             <div className="newTeam">
+                <h1>Teams</h1>
+                <label> Create New Team:</label>
+                 <input type="text" id="teamName" value={this.state.teamName} onChange={this.changeAttribute} />
+
+                 <input type="button" value="Create Team" onClick={this.addTeam} />
+                 <br/>
+
+               </div>
+
+               {
+               /*
                 <div className="tryoutEdit">
                     <h1>Sessions</h1>
 
                  <form>
                  <label>Start Date and Time:</label>
-                 <input type="datetime-local" id="dateTimeStart" value={this.state.startTime} onChange={this.onPickDateTime} />
+                    <DatePicker selected={this.state.startTime} onChange={this.changeStartTime}  dateFormat="MMMM/d/yyyy-h:mm"
+    />
                  <br/>
 
                  <label> End Date and Time:</label>
@@ -176,14 +223,14 @@ class TryoutDashboard extends React.Component {
                  <h1>Executives</h1>
                  
                  <label> Additional Executive (Email):</label>
-                 <input type="text" id="executive" value={this.state.executive1} onChange={this.changeAttribute} />
+                 <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
 
-                 <input type="button" value="Add Executive" onClick={this.addExecutive} />
+                 <input type="button" value="Add Executive" onClick={this.addExecutive1} />
                  <br/>
                  
 
                  </form>
-               </div>
+               </div>*/}
 
            </div>
         );

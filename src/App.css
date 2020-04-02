@@ -295,6 +295,23 @@
   top:120px;
   width:30%;
   text-align:center;
+  left:35%;
+  
+ 
+  
+  
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+ .addExec {
+  position: absolute;
+  top:120px;
+  width:30%;
+  text-align:center;
   right:3%;
   
  
@@ -307,6 +324,26 @@
   padding-right: 30px;
   padding-bottom: 30px;
 }
+
+ .newTeam {
+  position: absolute;
+  top:120px;
+  width:30%;
+  text-align:center;
+  right:3%;
+  top: 50%;
+  
+ 
+  
+  
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+
 
 .tryoutEdit{
   position: absolute;
