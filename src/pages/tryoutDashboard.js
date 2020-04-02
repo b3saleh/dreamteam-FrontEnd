@@ -215,8 +215,8 @@ class TryoutDashboard extends React.Component {
 
                     {this.state.teamIDs.map(
                             (id) =>
-                                <ListItem key={id}>
-                                    <Link to="/BuildTeam" onClick={this.teamClicked} id={id}>
+                                <ListItem key={id} >
+                                    <Link to="/BuildTeam" onClick={this.teamClicked} id={id} className="teamListLinks">
                                         {this.state.teamNames[this.state.teamIDs.indexOf(id)] }
                                     </Link>
                                 </ListItem>

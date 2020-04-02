@@ -258,6 +258,15 @@
   padding-right: 15px;
   padding-bottom: 30px;
 }
+ .teamListLinks {
+    position: relative;
+    text-align: center;
+      
+ 
+  color: #ffde59 ;
+  font-size: 20px;
+  
+}
 
   .text-block {
   position: absolute;
