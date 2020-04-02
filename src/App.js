@@ -47,6 +47,7 @@ function App() {
 				(result) => {
 					setUserFirstName(result.firstName);
                     localStorage.setItem('firstName', result.firstName);
+                    localStorage.setItem('userEmail', result.email)
 				},
 				(error) => {
 				});
@@ -71,7 +72,7 @@ function App() {
               <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
               <Route exact path= "/BuildTeam" component={buildTeam}/>
-              <Route exact path= "/TryoutEvaluation" componen={TryoutEvaluation}/>
+              <Route exact path= "/TryoutEvaluation" component={TryoutEvaluation}/>
               <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
               <Route exact path= "/TryoutDashboard" component={TryoutDashboard}/>

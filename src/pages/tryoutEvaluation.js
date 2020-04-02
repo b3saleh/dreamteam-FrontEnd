@@ -22,48 +22,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 class EvalGauge extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {score: 0.5};
+
+    handlePlusClick = () => {
+        this.props.increaseGrade(this.props.id);
     }
 
-    increaseScore = (event) => {
-        this.setState({score: this.state.score + 0.1});
-    }
+    handleMinusClick = () => {
+        this.props.decreaseGrade(this.props.id);
 
-    decreaseScore = (event) => {
-        this.setState({score: this.state.score - 0.1});
     }
 
     render() {
-        let plusButton;
-        let minusButton;
-        if(this.state.score > 0.9){
-            plusButton = <button onClick={this.increaseScore} disabled={true}>+</button>
-        } else {
-            plusButton = <button onClick={this.increaseScore}>+</button>
-        }
-        if(this.state.score < 0.1){
-            minusButton = <button onClick={this.decreaseScore} disabled={true}>-</button>
-        } else {
-            minusButton = <button onClick={this.decreaseScore}>-</button>;
-        }
-
         return(
              <div className="gauges">
                  <h4> {this.props.name}</h4>
                   <GaugeChart id={this.props.name}
-                    nrOfLevels={10}
+                    nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
-                    percent={this.state.score}
+                    percent={(this.props.grade / 5) - 0.1}
                 />
-                 {minusButton}
-                 {plusButton}
+                 <button onClick={this.handleMinusClick} disabled={this.props.grade < 2}>-</button>
+                 <button onClick={this.handlePlusClick} disabled={this.props.grade > 4}>+</button>
              </div>
             );
     }
 }
+
 
 class EvalComments extends React.Component{
     constructor(props){
@@ -101,50 +87,43 @@ class AthleteList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0};
-    }
-
-    buttonClicked = (event) => {
-        //space for API Call
-        this.setState({index: this.state.index, selected: event.target.id});
-        let message = "Athlete" + event.target.id
-        console.log(message);
-    }
-
-    PlayerList = () => {
+        this.state = {playerFirstNames: [], playerLastNames: [], playerIDs: []};
         const getListUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({playerFirstNames: result.playerFirstNames})
-                    this.setState({playerLastNames: result.playerLastNames})
-                    this.setState({playerIDs: result.playerIDs})
-                    this.setState({selected: this.state.selected || result.playerIDs[0]})
+                    this.setState({playerFirstNames: result.playerFirstNames});
+                    this.setState({playerLastNames: result.playerLastNames});
+                    this.setState({playerIDs: result.playerIDs});
+                    this.props.onSelection(result.playerIDs[0]);
                 },
                 (error) => {
                     return <>Error with API call: {getListUrl}</>;
                 }
             );
 
-            return (
-                <List>
-                    {this.state.playerIDs.map(
-                            (id) =>
-                                <ListItem button selected={this.state.selected === id} onClick={this.buttonClicked} key={id} id={id}>
-                                    {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
-                                </ListItem>
-                        )
-                    }
-                </List>
-            );
     }
+
+    buttonClicked = (event) => {
+        this.props.onSelection(event.target.id);
+    }
+
+
 
     render() {
         return (
             <div className="somethingElse">
                 <h1>Athlete List</h1>
-                <this.PlayerList/>
+                <List>
+                    {this.state.playerIDs.map(
+                            (id) =>
+                                <ListItem button selected={this.props.selectedPlayer === id} onClick={this.buttonClicked} key={id} id={id}>
+                                    {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                </ListItem>
+                        )
+                    }
+                </List>
             </div>
         );
     }
@@ -154,9 +133,7 @@ class AthleteList extends React.Component {
 class TryoutEvaluation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {criteriaNames: []}
-    }
-    CriteriaList = () => {
+        this.state = {criteriaNames: [], criteriaGrades: [], criteriaIDs: [], selectedPlayer: 0}
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
 			.then(
@@ -165,32 +142,84 @@ class TryoutEvaluation extends React.Component {
 			)
 			.then(
 				(result) => {
-					this.setState({criteriaNames: result.criteriaNames})
+					this.setState({criteriaNames: result.criteriaNames});
+					this.setState({criteriaIDs: result.criteriaIDs});
 				},
 				(error) => {
 					return <>Error with API call: {getListUrl}</>;
 				}
 			);
-		return (
-			<>
-				{
-				    this.state.criteriaNames.map(
-				        ( criterion ) => <EvalGauge name={criterion}/>
-                    )
-				}
-			</>
-		);
-	}
+        this.handleSelection = this.handleSelection.bind(this);
+        this.decreaseGrade = this.decreaseGrade.bind(this);
+        this.increaseGrade = this.increaseGrade.bind(this);
+    }
+
+    increaseGrade(criterionID) {
+        let criteriaGrades = [...this.state.criteriaGrades];
+        criteriaGrades[this.state.criteriaIDs.indexOf(criterionID)] += 1;
+        let updateAPI = urlAPI + "submitEval/?userID=" + localStorage.getItem("userID") + "&playerID=" + this.state.selectedPlayer + "&criterionID=" + criterionID + "&grade=" + criteriaGrades[this.state.criteriaIDs.indexOf(criterionID)];
+        fetch(updateAPI, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) =>{
+                    this.setState({criteriaGrades: criteriaGrades});
+                },
+                (error) => {
+                    return <>Error with API call: {updateAPI}</>;
+                }
+            )
+    }
+
+    decreaseGrade(criterionID) {
+        let criteriaGrades = [...this.state.criteriaGrades];
+        criteriaGrades[this.state.criteriaIDs.indexOf(criterionID)] -= 1;
+        let updateAPI = urlAPI + "submitEval/?userID=" + localStorage.getItem("userID") + "&playerID=" + this.state.selectedPlayer + "&criterionID=" + criterionID + "&grade=" + criteriaGrades[this.state.criteriaIDs.indexOf(criterionID)];
+        fetch(updateAPI, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) =>{
+                    this.setState({criteriaGrades: criteriaGrades});
+                },
+                (error) => {
+                    return <>Error with API call: {updateAPI}</>;
+                }
+            )
+    }
+
+    handleSelection(playerID){
+        this.setState({selectedPlayer: playerID});
+        const getEvalsUrl = urlAPI + "getEvals/?playerID=" + playerID + "&userID=" + localStorage.getItem("userID");
+        fetch(getEvalsUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let criteriaGrades = Array(this.state.criteriaIDs.length).fill(3);
+                    if(result.criteriaGrades.length > 0){
+                        result.criteriaGrades.map(
+                            (grade) =>
+                                criteriaGrades[this.state.criteriaIDs.indexOf(result.criteriaIDs[result.criteriaGrades.indexOf(grade)])] = grade
+                        )
+                    }
+                    this.setState({criteriaGrades: criteriaGrades});
+                },
+                (error) => {
+                    return <>Error with API call: {getEvalsUrl}</>;
+                }
+            );
+    }
 
     render() {
         return (
            <div>
            <img src={smallLogo} className="icon" alt="small_logo" />
            <img src={logo} className="bg_lower" alt="logo" />
-           <AthleteList/>
+           <AthleteList selectedPlayer={this.state.selectedPlayer} onSelection={this.handleSelection}/>
 
                 <div className="evalGauges">
-                    <this.CriteriaList/>
+				{
+				    this.state.criteriaNames.map(
+				        ( criterion ) => <EvalGauge name={criterion} id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]} grade={this.state.criteriaGrades[this.state.criteriaNames.indexOf(criterion)]} increaseGrade={this.increaseGrade} decreaseGrade={this.decreaseGrade}/> )
+				}
                 </div>
                 <EvalComments/>
 
