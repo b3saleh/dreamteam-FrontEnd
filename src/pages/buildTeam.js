@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
+import {TopNav} from '../components/TopNav';
+import {urlAPI} from "../Constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,38 +48,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-class EvalGauge extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {score: 0.5};
-    }
-
-   
-
-    render() {
-        
-
-        let gaugeID = "gauge-char" + this.props.idNum ;
-        return(
-             <div className={this.props.name}>
-                 <h4> Criterion #{this.props.idNum}</h4>
-                  <GaugeChart id={gaugeID}
-                    nrOfLevels={10}
-                    colors={["#fc0f03", "#7de330"]}
-                    percent={this.state.score}
-                />
-                 
-             </div>
-            );
-    }
-}
-
-
-
-
-
-
-
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -86,168 +56,247 @@ function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1);
 }
 
- function TransferList() {
-  const classes = useStyles();
-  const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([]);
-  const [right, setRight] = React.useState([0,1,2,3,4,5,6,7]);
 
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
+class EvalGauge extends React.Component{
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+    render() {
+        return(
+             <div className="gauges">
+                 <h4> {this.props.name}</h4>
+                  <GaugeChart id={this.props.id}
+                    nrOfLevels={5}
+                    colors={["#fc0f03", "#7de330"]}
+                    percent={(this.props.average / 5) - 0.1}
+                  />
+             </div>
+            );
+    }
+}
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+
+class TransferList extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {availableChecked: [], teamChecked: [], checked: []};
     }
 
-    setChecked(newChecked);
+  handleToggle = (event) => {
+
+    if (this.props.availablePlayerIDs.indexOf(event.target.id) !== -1){
+        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
+        let newChecked = [...this.state.availableChecked];
+        if (currentIndex === -1) {
+          newChecked.push(event.target.id);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+        this.setState({availableChecked: newChecked});
+    } else {
+        let currentIndex = this.state.teamChecked.indexOf(event.target.id);
+        let newChecked = [...this.state.teamChecked];
+        if (currentIndex === -1) {
+          newChecked.push(event.target.id);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+        this.setState({teamChecked: newChecked});
+    }
   };
 
-  const handleAllRight = () => {
-    setRight(right.concat(left));
-    setLeft([]);
+  handleRemoveAll = () => {
+    this.props.clearTeam();
   };
 
-  const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
-    setChecked(not(checked, leftChecked));
+  handleRemove = () => {
+      this.props.removePlayers(this.state.teamChecked)
   };
 
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
-    setChecked(not(checked, rightChecked));
+  handleAdd = () => {
+      this.props.addPlayers(this.state.availableChecked)
   };
 
-  const handleAllLeft = () => {
-    setLeft(left.concat(right));
-    setRight([]);
-  };
-
-  const customList = (items) => (
-    <Paper className={classes.paper}>
-      <List className= "team_list" dense component="div" role="list">
-        {items.map((value) => {
-          const labelId = `transfer-list-item-${value}-label`;
-
-          return (
-
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-              <ListItemIcon>
-                <Checkbox className={classes.checkBox}
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                  color='yellow'
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
-            </ListItem>
-          );
-        })}
-        <ListItem />
-      </List>
-    </Paper>
+  availableList = () => (
+      this.props.availablePlayerIDs.map(
+          (id) =>
+                <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                  <ListItemIcon>
+                    <Checkbox className={useStyles.checkBox}
+                      checked={this.state.availableChecked.indexOf(id) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      color='yellow'
+                    />
+                  </ListItemIcon>
+                  <ListItemText id={id} primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
+                </ListItem>
+              )
   );
 
-  return (
-    <Grid container spacing={2} justify="center" alignItems="stretch" className={classes.root}>
-      
-      <Grid item className="leftList">
-        <h1> Athletes</h1>
-      {customList(right)}
-        
-      </Grid>
-     
-      <Grid item>
-        <Grid container direction="column" alignItems="stretch">
-        <Button
-            variant="contained"
-            size="small"
-            className="addPlayer"
-            color="white"
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left"
-          >
-            Add
-          </Button>
-         
-          <Button
-            variant="contained"
-            color="white"
-            size="small"
-            className="removePlayer"
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right"
-          >
-            Remove
-          </Button>
+  teamList = () => (
+      this.props.teamPlayerIDs.map(
+          (id) =>
+                <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                  <ListItemIcon>
+                    <Checkbox className={useStyles.checkBox}
+                      checked={this.state.availableChecked.indexOf(id) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      color='yellow'
+                    />
+                  </ListItemIcon>
+                  <ListItemText id={id} primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
+                </ListItem>
+              )
+  );
 
-           <Button
-            variant="contained"
-            size="small"
-            className="clrList"
-            onClick={handleAllRight}
-            disabled={left.length === 0}
-            aria-label="move all right"
-          >
-            Clear Team
-          </Button>
-          
-         
+  render() {
+      return (
+        <Grid container spacing={2} justify="center" alignItems="stretch" className={useStyles.root}>
+
+          <Grid item className="leftList">
+            <h1> Athletes</h1>
+                <Paper className={useStyles.paper}>
+                  <List className= "team_list" dense component="div" role="list">
+                        <this.availableList />
+                  </List>
+              </Paper>
+
+          </Grid>
+
+          <Grid item>
+            <Grid container direction="column" alignItems="stretch">
+            <Button
+                variant="contained"
+                size="small"
+                className="addPlayer"
+                color="white"
+                onClick={this.handleAdd}
+                disabled={this.state.availableChecked.length === 0}
+                aria-label="move selected left"
+              >
+                Add
+              </Button>
+
+              <Button
+                variant="contained"
+                color="white"
+                size="small"
+                className="removePlayer"
+                onClick={this.handleRemove}
+                disabled={this.state.teamChecked.length === 0}
+                aria-label="move selected right"
+              >
+                Remove
+              </Button>
+
+               <Button
+                variant="contained"
+                size="small"
+                className="clrList"
+                onClick={this.handleRemoveAll}
+                disabled={this.props.teamPlayerIDs.length === 0}
+                aria-label="move all right"
+              >
+                Clear Team
+              </Button>
+
+
+            </Grid>
+          </Grid>
+        <Grid item className="rightList">
+          <h1> Team</h1>
+            <Paper className={useStyles.paper}>
+                  <List className= "team_list" dense component="div" role="list">
+                        <this.teamList />
+                  </List>
+              </Paper>
         </Grid>
-      </Grid>
-      <Grid item className="rightList"> 
-      <h1> Team</h1>
-      {customList(left)}</Grid>
-    </Grid>
-  );
-}
-
-
- 
-export const buildTeam = () => {
-    return (
-       <div>
-       <img src={smallLogo} className="icon" alt="small_logo" />
-       <img src={logo} className="bg_lower" alt="logo" />    
-       <TransferList/>
-       
-
-            <EvalGauge name="gauges-view" idNum="1" />
-            <EvalGauge name="gauges-view2" idNum="2" />
-            <EvalGauge name="gauges-view3" idNum="3" />
-            
-           
-
-    <div class="topnav">
-         <a href="/Notifications" >
-            Notifications
-           </a>
-      <a href="/MyTeams" >
-            Teams
-           </a>
-           <a href="/CreateATryout" >
-            Create A Tryout
-           </a>
-           <a href="/Profile" >
-            Profile
-           </a>
-
-          </div>
-
-
-       </div>
-    );
+        </Grid>
+      );
+  }
 }
  
-export default buildTeam;
+class BuildTeam extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {teamPlayerFirstNames: [], teamPlayerLastNames: [], teamPlayerIDs: [], availablePlayerIDs: [], availablePlayerFirstNames: [], availablePlayerLastNames: [], criteriaNames: [], criteriaAverages: [], criteriaIDs: []}
+        const getTeamUrl = urlAPI + "teamPlayers/?teamID=" + localStorage.getItem('currentTeamID');
+        fetch(getTeamUrl)
+			.then(res => res.json())
+			.then(
+				(result) => {
+					this.setState({teamPlayerIDs: result.playerIDs});
+					this.setState({teamPlayerFirstNames: result.playerFirstNames});
+					this.setState({teamPlayerLastNames: result.playerLastNames});
+				},
+				(error) => {
+					return <>Error with API call: {getTeamUrl}</>;
+				}
+			);
+        const getAvailableUrl = urlAPI + "availablePlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getAvailableUrl)
+			.then(res => res.json())
+			.then(
+				(result) => {
+					this.setState({availablePlayerIDs: result.playerIDs});
+					this.setState({availablePlayerFirstNames: result.playerFirstNames});
+					this.setState({availablePlayerLastNames: result.playerLastNames});
+				},
+				(error) => {
+					return <>Error with API call: {getAvailableUrl}</>;
+				}
+			);
+        if (this.state.teamPlayerIDs.length > 0){
+            const getTeamAveragesUrl = urlAPI + "getTeamAverages/?teamID=" + localStorage.getItem('currentTeamID');
+            fetch(getTeamAveragesUrl)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        let criteriaAverages = Array(this.state.criteriaIDs.length).fill(3);
+                        if(result.criteriaAverages.length > 0){
+                            result.criteriaAverages.map(
+                                (value) =>
+                                    criteriaAverages[this.state.criteriaIDs.indexOf(result.criteriaIDs[result.criteriaAverages.indexOf(value)])] = value
+                            )
+                        }
+                        this.setState({criteriaAverages: criteriaAverages});
+                    }
+                );
+        } else {
+            let criteriaAverages = Array(this.state.criteriaIDs.length).fill(3);
+            this.setState({criteriaAverages: criteriaAverages});
+        }
+    }
+
+    clearTeam = () => {
+        //Code to Clear Team
+    }
+
+    render () {
+        return (
+           <div>
+           <img src={smallLogo} className="icon" alt="small_logo" />
+           <img src={logo} className="bg_lower" alt="logo" />
+           <TransferList clearTeam={this.clearTeam} addPlayer={this.addPlayer} removePlayer={this.removePlayer} availablePlayerIDs={this.state.availablePlayerIDs} availablePlayerFirstNames={this.state.availablePlayerFirstNames} availablePlayerLastNames={this.state.availablePlayerLastNames}  teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames} />
+
+                <div className="evalGauges">
+				{
+				    this.state.teamPlayerIDs.length > 0
+                        ?
+                        this.state.criteriaNames.map(
+                        ( criterion ) => <EvalGauge name={criterion} id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]} average={this.state.criteriaAverages[this.state.criteriaNames.indexOf(criterion)]}/> )
+
+                        :
+                        <h1>Add A Player to The Team To See Averages</h1>
+
+                }
+                </div>
+
+                <TopNav/>
+
+           </div>
+        );
+    }
+}
+ 
+export {BuildTeam};
