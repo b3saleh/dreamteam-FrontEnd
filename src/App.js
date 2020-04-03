@@ -23,7 +23,7 @@ import {tryoutSignUp} from './pages/tryoutSignUp'
 import {signUpSuccess} from './pages/signupSuccessful'
 import {TryoutDashboard} from './pages/tryoutDashboard'
 import {urlAPI} from "./Constants";
-import {buildTeamTest} from './pages/buildTeamTest'
+
 
 
 
@@ -76,7 +76,7 @@ function App() {
               <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
               <Route exact path= "/TryoutDashboard" component={TryoutDashboard}/>
-              <Route exact path= "/BuildTeamTest" component={buildTeamTest}/>
+              
               <Route component={NotFound} />
             </Switch>
           </Router>
