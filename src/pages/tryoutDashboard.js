@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import {Link} from 'react-router-dom';
-import DatePicker from 'react-datepicker';
+
 
 class TryoutDashboard extends React.Component {
     constructor(props) {
