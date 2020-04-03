@@ -13,9 +13,10 @@ class TopNav extends React.Component {
             < a href = "/Notifications" >
                 Notifications
             < /a>
-            <a href="/MyTeams">
-                Teams
+            {localStorage.getItem("currentTryoutID") ? <a href="/TryoutDashboard">
+                Tryout
             </a>
+            : <> </>}
             <a href="/CreateATryout" >
                 Create A Tryout
             </a>
