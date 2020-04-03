@@ -103,12 +103,7 @@ function intersection(a, b) {
 
             <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
               <ListItemIcon>
-                <Checkbox className={classes.checkBox}
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                  color='yellow'
+                <Checkbox className="checkBoxes"
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={`List item ${value + 1}`} />
