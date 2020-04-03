@@ -13,7 +13,10 @@ import {Link} from 'react-router-dom';
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {buttonClicked: false,criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
+        this.state = {updateRequired: true, buttonClicked: false,criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
+    }
+
+    updateAPICalls = () => {
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(
@@ -50,14 +53,14 @@ class TryoutDashboard extends React.Component {
                 (result) => {
                     this.setState({teamNames: result.teamNames})
                     this.setState({teamIDs: result.teamIDs})
-                   
-                    
+
+
                 },
                 (error) => {
                     return <>Error with API call: {getListUrl}</>;
                 }
             );
-
+        this.setState({updateRequired: false});
     }
 
    changeStartTime = (event) => {
@@ -137,6 +140,8 @@ class TryoutDashboard extends React.Component {
                     // Code if shit hit the fan
                 }
             );
+        this.setState({updateRequired: true});
+        this.setState({teamName: ""});
     }
         
 
@@ -144,6 +149,9 @@ class TryoutDashboard extends React.Component {
         if(this.state.buttonClicked){
 			return <Redirect to={'/tryoutEvaluation'} />
 		}
+        if(this.state.updateRequired){
+            this.updateAPICalls();
+        }
 
        
 
