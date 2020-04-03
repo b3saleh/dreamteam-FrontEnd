@@ -94,8 +94,10 @@
 
 }
 
-.checkBox{
-  color:white;
+.checkBoxes{
+  color:black;
+  border:white;
+  border-width: 3px;
 }
 
 .team_list{

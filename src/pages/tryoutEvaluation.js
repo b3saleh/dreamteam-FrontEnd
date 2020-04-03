@@ -54,17 +54,20 @@ class EvalGauge extends React.Component{
 class EvalComments extends React.Component{
     constructor(props){
         super(props);
-        this.state = {comment: ""};
-        //DOTHISSSSSSS
-        const getCommentsUrl = urlAPI + "getComments/?playerID=" + localStorage.getItem('currentTryoutID');
+        this.state = {comment: "", savedComments:[], commentIDs:[]};
+
+        
+        const getCommentsUrl = urlAPI + "getComments/?playerID=" + this.props.selectedPlayer;
         fetch(getCommentsUrl)
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({playerFirstNames: result.playerFirstNames});
-                    this.setState({playerLastNames: result.playerLastNames});
-                    this.setState({playerIDs: result.playerIDs});
-                    this.props.onSelection(result.playerIDs[0]);
+                 this.setState({savedComments: result.comments})
+                 this.setState({commentIDs: result.commentIDs})
+                 this.props.onSelection(result.commentIDs[0]);
+                 
+
+                
                 },
                 (error) => {
                     return <>Error with API call: {getCommentsUrl}</>;
@@ -77,7 +80,17 @@ class EvalComments extends React.Component{
     }
 
     sendComment = (event) => {
-        // Space for API code
+        const sendCommentUrl = urlAPI + "postComment/?playerID=" + this.props.selectedPlayer + "&userID=" + localStorage.getItem("userID") + "&commentText=" + this.state.comment;
+        fetch(sendCommentUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    
+                },
+                (error) => {
+                    // Code if shit hit the fan
+                }
+            );
         
         this.setState({comment: ""});
     }
@@ -90,7 +103,23 @@ class EvalComments extends React.Component{
              <label> Evaluation Criteria:</label>
             <input type="text" value={this.state.comment} onChange={this.updateComment}/>
             <input type="button" value="Submit Comment" onClick={this.sendComment}/>
+            <List className="playerList">
+                    {this.state.commentIDs.map(
+                            (id) =>
+                                <ListItem >
+                                    {this.state.savedComments[this.state.commentIDs.indexOf(id)] }
+                                </ListItem>
+                        )
+                    }
+                    </List>
+               
+        
+                
+                        
             </div>
+
+            
+                                
             );
     }
 }
@@ -234,13 +263,14 @@ class TryoutEvaluation extends React.Component {
            <img src={logo} className="bg_lower" alt="logo" />
            <AthleteList selectedPlayer={this.state.selectedPlayer} onSelection={this.handleSelection}/>
 
+
                 <div className="evalGauges">
 				{
 				    this.state.criteriaNames.map(
 				        ( criterion ) => <EvalGauge name={criterion} id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]} grade={this.state.criteriaGrades[this.state.criteriaNames.indexOf(criterion)]} increaseGrade={this.increaseGrade} decreaseGrade={this.decreaseGrade}/> )
 				}
                 </div>
-                <EvalComments/>
+                <EvalComments selectedPlayer={this.state.selectedPlayer}/>
 
 
             <TopNav/>

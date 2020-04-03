@@ -8,12 +8,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import {Link} from 'react-router-dom';
-import DatePicker from 'react-datepicker';
+
 
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
+        this.state = {buttonClicked: false,criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(
@@ -83,6 +83,12 @@ class TryoutDashboard extends React.Component {
         localStorage.setItem("currentTeamID", event.target.id);
     }
 
+     buttonClicked = (event) => {
+        this.setState({
+            buttonClicked:true
+        })
+    }
+
     /*
 
 	addSession = (event) => {
@@ -135,7 +141,7 @@ class TryoutDashboard extends React.Component {
         
 
     render(){
-        if(this.state.evalClicked){
+        if(this.state.buttonClicked){
 			return <Redirect to={'/tryoutEvaluation'} />
 		}
 
