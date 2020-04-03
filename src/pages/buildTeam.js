@@ -48,22 +48,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function not(a, b) {
-  return a.filter((value) => b.indexOf(value) === -1);
-}
-
-function intersection(a, b) {
-  return a.filter((value) => b.indexOf(value) !== -1);
-}
-
-
 class EvalGauge extends React.Component{
 
     render() {
         return(
              <div className="gauges">
                  <h4> {this.props.name}</h4>
-                  <GaugeChart id={this.props.id}
+                  <GaugeChart id={this.props.name}
                     nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
                     percent={(this.props.average / 5) - 0.1}
@@ -82,8 +73,8 @@ class TransferList extends React.Component {
 
   handleToggle = (event) => {
 
-    if (this.props.availablePlayerIDs.indexOf(event.target.id) !== -1){
-        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
+    if (this.props.availablePlayerIDs.indexOf(parseInt(event.target.id)) > -1){
+        let currentIndex = this.state.availableChecked.indexOf(parseInt(event.target.id));
         let newChecked = [...this.state.availableChecked];
         if (currentIndex === -1) {
           newChecked.push(event.target.id);
@@ -91,8 +82,8 @@ class TransferList extends React.Component {
           newChecked.splice(currentIndex, 1);
         }
         this.setState({availableChecked: newChecked});
-    } else {
-        let currentIndex = this.state.teamChecked.indexOf(event.target.id);
+    } else if (this.props.teamPlayerIDs.indexOf(parseInt(event.target.id)) > -1) {
+        let currentIndex = this.state.teamChecked.indexOf(parseInt(event.target.id));
         let newChecked = [...this.state.teamChecked];
         if (currentIndex === -1) {
           newChecked.push(event.target.id);
@@ -122,12 +113,14 @@ class TransferList extends React.Component {
                   <ListItemIcon>
                     <Checkbox className={useStyles.checkBox}
                       checked={this.state.availableChecked.indexOf(id) !== -1}
+                      id={id}
                       tabIndex={-1}
+                      inputProps={{'aria-labelledby': id}}
                       disableRipple
                       color='yellow'
                     />
                   </ListItemIcon>
-                  <ListItemText id={id} primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
+                  <ListItemText primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + " " + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
                 </ListItem>
               )
   );
@@ -140,11 +133,12 @@ class TransferList extends React.Component {
                     <Checkbox className={useStyles.checkBox}
                       checked={this.state.availableChecked.indexOf(id) !== -1}
                       tabIndex={-1}
+                      inputProps={{'aria-labelledby': id}}
                       disableRipple
                       color='yellow'
                     />
                   </ListItemIcon>
-                  <ListItemText id={id} primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
+                  <ListItemText primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + " " + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
                 </ListItem>
               )
   );
@@ -219,8 +213,25 @@ class TransferList extends React.Component {
 class BuildTeam extends React.Component {
     constructor(props){
         super(props);
-        this.state = {teamPlayerFirstNames: [], teamPlayerLastNames: [], teamPlayerIDs: [], availablePlayerIDs: [], availablePlayerFirstNames: [], availablePlayerLastNames: [], criteriaNames: [], criteriaAverages: [], criteriaIDs: []}
-        const getTeamUrl = urlAPI + "teamPlayers/?teamID=" + localStorage.getItem('currentTeamID');
+        this.state = {updateRequired: true, teamPlayerFirstNames: [], teamPlayerLastNames: [], teamPlayerIDs: [], availablePlayerIDs: [], availablePlayerFirstNames: [], availablePlayerLastNames: [], criteriaNames: [], criteriaAverages: [], criteriaIDs: []}
+        this.UpdateApiCalls = this.UpdateApiCalls.bind(this);
+        this.addPlayers = this.addPlayers.bind(this);
+        this.removePlayers = this.removePlayers.bind(this);
+        this.clearTeam = this.clearTeam.bind(this);
+        const listCriteriaUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
+            fetch(listCriteriaUrl)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                            this.setState({criteriaIDs: result.criteriaIDs});
+                            this.setState({criteriaNames: result.criteriaNames});
+                            this.setState({criteriaAverages: Array(result.criteriaIDs.length).fill(3)});
+                    }
+                );
+    }
+
+    UpdateApiCalls() {
+        const getTeamUrl = urlAPI + "teamPlayers/?teamID=" + 1; //localStorage.getItem('currentTeamID');
         fetch(getTeamUrl)
 			.then(res => res.json())
 			.then(
@@ -247,47 +258,111 @@ class BuildTeam extends React.Component {
 				}
 			);
         if (this.state.teamPlayerIDs.length > 0){
-            const getTeamAveragesUrl = urlAPI + "getTeamAverages/?teamID=" + localStorage.getItem('currentTeamID');
+            const getTeamAveragesUrl = urlAPI + "getTeamAverages/?teamID=" + 1; //localStorage.getItem('currentTeamID');
             fetch(getTeamAveragesUrl)
                 .then(res => res.json())
                 .then(
                     (result) => {
                         let criteriaAverages = Array(this.state.criteriaIDs.length).fill(3);
-                        if(result.criteriaAverages.length > 0){
-                            result.criteriaAverages.map(
-                                (value) =>
-                                    criteriaAverages[this.state.criteriaIDs.indexOf(result.criteriaIDs[result.criteriaAverages.indexOf(value)])] = value
+                        if(result.averages.length > 0){
+                            result.ids.map(
+                                (id) =>
+                                    criteriaAverages[this.state.criteriaIDs.indexOf(parseInt(id))] = result.averages[result.ids.indexOf(parseInt(id))]
                             )
                         }
                         this.setState({criteriaAverages: criteriaAverages});
+                        console.log(criteriaAverages);
                     }
                 );
-        } else {
-            let criteriaAverages = Array(this.state.criteriaIDs.length).fill(3);
-            this.setState({criteriaAverages: criteriaAverages});
         }
+        this.setState({updateRequired: false});
+        return <></>
     }
 
     clearTeam = () => {
-        //Code to Clear Team
+        let removePlayerUrl = "";
+        this.state.teamPlayerIDs.map(
+            (playerID) => {
+                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
+                fetch(removePlayerUrl, {method: 'POST'})
+                    .then(res => res.json())
+                    .then(
+                        (result) => {
+                        },
+                        (error) => {
+                            return <>Error with API call: {removePlayerUrl}</>;
+                        }
+                    )
+            }
+        );
+        this.setState({updateRequired: true});
+
+    }
+
+    addPlayers(playerIDList) {
+        let removePlayerUrl = "";
+        playerIDList.map(
+            (playerID) => {
+                removePlayerUrl = urlAPI + "addPlayerToTeam/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
+                fetch(removePlayerUrl, {method: 'POST'})
+                    .then(res => res.json())
+                    .then(
+                        (result) => {
+                        },
+                        (error) => {
+                            return <>Error with API call: {removePlayerUrl}</>;
+                        }
+                    )
+            }
+        );
+        this.setState({updateRequired: true});
+    }
+
+    removePlayers(playerList) {
+        let removePlayerUrl = "";
+        playerList.map(
+            (playerID) => {
+                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
+                fetch(removePlayerUrl, {method: 'POST'})
+                    .then(res => res.json())
+                    .then(
+                        (result) => {
+                        },
+                        (error) => {
+                            return <>Error with API call: {removePlayerUrl}</>;
+                        }
+                    )
+
+            }
+        );
+        this.setState({updateRequired: true});
     }
 
     render () {
+        if(this.state.updateRequired){
+            return <this.UpdateApiCalls />
+        }
         return (
            <div>
            <img src={smallLogo} className="icon" alt="small_logo" />
            <img src={logo} className="bg_lower" alt="logo" />
-           <TransferList clearTeam={this.clearTeam} addPlayer={this.addPlayer} removePlayer={this.removePlayer} availablePlayerIDs={this.state.availablePlayerIDs} availablePlayerFirstNames={this.state.availablePlayerFirstNames} availablePlayerLastNames={this.state.availablePlayerLastNames}  teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames} />
+           <TransferList clearTeam={this.clearTeam} addPlayers={this.addPlayers} removePlayers={this.removePlayers} availablePlayerIDs={this.state.availablePlayerIDs} availablePlayerFirstNames={this.state.availablePlayerFirstNames} availablePlayerLastNames={this.state.availablePlayerLastNames}  teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames} />
 
                 <div className="evalGauges">
 				{
-				    this.state.teamPlayerIDs.length > 0
+				    this.state.teamPlayerIDs.length > 1
                         ?
                         this.state.criteriaNames.map(
-                        ( criterion ) => <EvalGauge name={criterion} id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]} average={this.state.criteriaAverages[this.state.criteriaNames.indexOf(criterion)]}/> )
+                            ( criterion ) =>
+                                <EvalGauge
+                                    name={criterion}
+                                    id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]}
+                                    average={this.state.criteriaAverages[this.state.criteriaNames.indexOf(criterion)]}
+                                />
+                        )
 
                         :
-                        <h1>Add A Player to The Team To See Averages</h1>
+                        <h1>Add At Least Two Players to The Team To See Averages</h1>
 
                 }
                 </div>
