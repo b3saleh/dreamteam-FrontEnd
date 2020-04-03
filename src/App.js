@@ -16,7 +16,7 @@ import {SignUpForm} from './pages/Signup';
 import {Findatryout} from './pages/Findatryout';
 import {UserDashboard} from './pages/userDashboard'
 import {CreateATryout} from './pages/createatryout'
-import {buildTeam} from './pages/buildTeam'
+import {BuildTeam} from './pages/buildTeam'
 import {TryoutEvaluation} from './pages/tryoutEvaluation'
 import {NotFound} from './pages/NotFound';
 import {tryoutSignUp} from './pages/tryoutSignUp'
@@ -71,7 +71,7 @@ function App() {
               <Route exact path= "/FindATryout" component={Findatryout}/>
               <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
-              <Route exact path= "/BuildTeam" component={buildTeam}/>
+              <Route exact path= "/BuildTeam" component={BuildTeam}/>
               <Route exact path= "/TryoutEvaluation" component={TryoutEvaluation}/>
               <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
