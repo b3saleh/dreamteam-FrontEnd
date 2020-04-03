@@ -38,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
       color: '#ffde59',
     },
   },
-  checked: {},
+  checked: {
+    color: '#ffde59',
+  },
   button: {
     margin: theme.spacing(0.5, 0),
 
@@ -46,6 +48,25 @@ const useStyles = makeStyles((theme) => ({
     
   },
 }));
+
+function DTCheckBox(props) {
+  const classes = useStyles();
+  const labelId = `transfer-list-item-${props.id}-label`;
+
+  return(
+    <ListItemIcon>
+                <Checkbox className={classes.checkBox}
+                  checked={props.checkedBool}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': labelId }}
+                  color='yellow'
+                  id={props.id}
+                  onClick={props.onToggle}
+                />
+              </ListItemIcon>
+              )
+}
 
 
 class EvalGauge extends React.Component{
@@ -72,9 +93,8 @@ class TransferList extends React.Component {
     }
 
   handleToggle = (event) => {
-
     if (this.props.availablePlayerIDs.indexOf(parseInt(event.target.id)) > -1){
-        let currentIndex = this.state.availableChecked.indexOf(parseInt(event.target.id));
+        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
         let newChecked = [...this.state.availableChecked];
         if (currentIndex === -1) {
           newChecked.push(event.target.id);
@@ -83,7 +103,7 @@ class TransferList extends React.Component {
         }
         this.setState({availableChecked: newChecked});
     } else if (this.props.teamPlayerIDs.indexOf(parseInt(event.target.id)) > -1) {
-        let currentIndex = this.state.teamChecked.indexOf(parseInt(event.target.id));
+        let currentIndex = this.state.teamChecked.indexOf(event.target.id);
         let newChecked = [...this.state.teamChecked];
         if (currentIndex === -1) {
           newChecked.push(event.target.id);
@@ -99,25 +119,21 @@ class TransferList extends React.Component {
   };
 
   handleRemove = () => {
-      this.props.removePlayers(this.state.teamChecked)
+    this.props.removePlayers(this.state.teamChecked);
   };
 
   handleAdd = () => {
-      this.props.addPlayers(this.state.availableChecked)
+    this.props.addPlayers(this.state.availableChecked);
   };
 
   availableList = () => (
       this.props.availablePlayerIDs.map(
           (id) =>
-                <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                <ListItem key={id} id={id} role="listitem">
                   <ListItemIcon>
-                    <Checkbox className={useStyles.checkBox}
-                      checked={this.state.availableChecked.indexOf(id) !== -1}
+                    <DTCheckBox onToggle={this.handleToggle}
                       id={id}
-                      tabIndex={-1}
-                      inputProps={{'aria-labelledby': id}}
-                      disableRipple
-                      color='yellow'
+                      checkedBool={this.state.availableChecked.indexOf(id.toString()) !== -1}
                     />
                   </ListItemIcon>
                   <ListItemText primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + " " + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
@@ -130,13 +146,9 @@ class TransferList extends React.Component {
           (id) =>
                 <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
                   <ListItemIcon>
-                    <Checkbox className={useStyles.checkBox}
-                      checked={this.state.availableChecked.indexOf(id) !== -1}
-                      tabIndex={-1}
-                      inputProps={{'aria-labelledby': id}}
-                      disableRipple
-                      color='yellow'
-                    />
+                    <DTCheckBox onToggle={this.handleToggle}
+                      id={id}
+                      checkedBool={this.state.teamChecked.indexOf(id.toString()) !== -1} />
                   </ListItemIcon>
                   <ListItemText primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + " " + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
                 </ListItem>
@@ -231,8 +243,8 @@ class BuildTeam extends React.Component {
     }
 
     UpdateApiCalls() {
-        const getTeamUrl = urlAPI + "teamPlayers/?teamID=" + 1; //localStorage.getItem('currentTeamID');
-        fetch(getTeamUrl)
+      const getTeamUrl = urlAPI + "teamPlayers/?teamID=" + localStorage.getItem('currentTeamID');
+      fetch(getTeamUrl)
 			.then(res => res.json())
 			.then(
 				(result) => {
@@ -257,8 +269,7 @@ class BuildTeam extends React.Component {
 					return <>Error with API call: {getAvailableUrl}</>;
 				}
 			);
-        if (this.state.teamPlayerIDs.length > 0){
-            const getTeamAveragesUrl = urlAPI + "getTeamAverages/?teamID=" + 1; //localStorage.getItem('currentTeamID');
+            const getTeamAveragesUrl = urlAPI + "getTeamAverages/?teamID=" + localStorage.getItem('currentTeamID');
             fetch(getTeamAveragesUrl)
                 .then(res => res.json())
                 .then(
@@ -274,8 +285,8 @@ class BuildTeam extends React.Component {
                         console.log(criteriaAverages);
                     }
                 );
-        }
         this.setState({updateRequired: false});
+        this.forceUpdate();
         return <></>
     }
 
@@ -283,7 +294,7 @@ class BuildTeam extends React.Component {
         let removePlayerUrl = "";
         this.state.teamPlayerIDs.map(
             (playerID) => {
-                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
+                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
                 fetch(removePlayerUrl, {method: 'POST'})
                     .then(res => res.json())
                     .then(
@@ -300,17 +311,17 @@ class BuildTeam extends React.Component {
     }
 
     addPlayers(playerIDList) {
-        let removePlayerUrl = "";
+        let addPlayerUrl = "";
         playerIDList.map(
             (playerID) => {
-                removePlayerUrl = urlAPI + "addPlayerToTeam/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
-                fetch(removePlayerUrl, {method: 'POST'})
+                addPlayerUrl = urlAPI + "addPlayerToTeam/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
+                fetch(addPlayerUrl, {method: 'POST'})
                     .then(res => res.json())
                     .then(
                         (result) => {
                         },
                         (error) => {
-                            return <>Error with API call: {removePlayerUrl}</>;
+                            return <>Error with API call: {addPlayerUrl}</>;
                         }
                     )
             }
@@ -322,7 +333,7 @@ class BuildTeam extends React.Component {
         let removePlayerUrl = "";
         playerList.map(
             (playerID) => {
-                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + 1; //localStorage.getItem('currentTeamID');
+                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
                 fetch(removePlayerUrl, {method: 'POST'})
                     .then(res => res.json())
                     .then(
