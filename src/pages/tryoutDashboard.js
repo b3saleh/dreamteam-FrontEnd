@@ -1,11 +1,8 @@
 import React from 'react';
-import { GlobalStyles } from '../global';
 import logo from '../DreamTeamLogo.PNG';
-import { TopNav } from '../components/TopNav';
 import {urlAPI} from '../Constants';
 import {Redirect} from "react-router-dom";
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import {Link} from 'react-router-dom';
 
@@ -153,128 +150,96 @@ class TryoutDashboard extends React.Component {
             this.updateAPICalls();
         }
 
-       
-
         return (
 
-           <div>
-            <img src={logo} className="bg_lower" alt="logo"/>
-            <TopNav />
+            <>
+                <div className="hero has-background-black">
+                    <div className="hero-body">
+                      <div className={"container"}>
+                        <p className="is-size-1">{localStorage.getItem('currentTryoutName')} Tryout Dashboard</p>
+                      </div>
+                    </div>
+                </div>
+                <section className="section has-background-black">
+                        <div className="columns">
+                            <div className="column">
+                                <div className="notification has-background-black">
+                                    <h className="is-size-3">Tryout Info</h>
+                                          <form>
+                                          <label> Tryout Name:</label>
+                                          <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} disabled/>
 
-            	<div className="text-block-players">
-            		<h1>List of Players</h1>
-            		<List className="playerList">
-                    {this.state.playerIDs.map(
-                            (id) =>
-                                <ListItem selected={this.state.selected === id} key={id} id={id}>
-                                    {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
-                                </ListItem>
-                        )
-                    }
-                    </List>
+                                         <br/>
+                                          <label> Evaluation Criterion 1:</label>
+                                          <input type="text" id="criterion1Name" value={this.state.criteriaNames[0]} disabled />
 
-            	</div>
+                                          <br/>
+                                          <label> Evaluation Criterion 2:</label>
+                                          <input type="text" id="criterion2Name" value={this.state.criteriaNames[1]} disabled />
 
-                
+                                          <br/>
+                                          <label> Evaluation Criterion 3:</label>
+                                          <input type="text" id="criterion3Name" value={this.state.criteriaNames[2]} disabled />
 
 
-               <div className="text-block-info">
-                    <h1>Tryout Information</h1>
+                                          <label> Player Sign Up Form:</label>
+                                          <input type="text" value={"http://localhost:3000/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink"  disabled />
 
-                 <form>
-                 <label> Tryout Name:</label>
-                 <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} disabled/>
+                                          <br/>
+                                          <br/>
 
-                <br/>
-                 <label> Evaluation Criterion 1:</label>
-                 <input type="text" id="criterion1Name" value={this.state.criteriaNames[0]} disabled />
+                                          <input type="button" value="Tryout Evaluation" onClick={this.buttonClicked} />
 
-                 <br/>
-                 <label> Evaluation Criterion 2:</label>
-                 <input type="text" id="criterion2Name" value={this.state.criteriaNames[1]} disabled />
+                                          </form>
+                                </div>
+                            </div>
+                            <div className="column">
+                                <div className="notification has-background-black">
+                                    <h className="is-size-3">Actions</h>
+                                        <p className="is-size-5">Executives</p>
+                                            <label> Add Executive (Email):</label>
+                                            <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
 
-                 <br/>
-                 <label> Evaluation Criterion 3:</label>
-                 <input type="text" id="criterion3Name" value={this.state.criteriaNames[2]} disabled />
+                                            <input type="button" value="Add Executive" onClick={this.addExecutive} />
+                                            <br/>
 
-                
-                 <label> Player Sign Up Form:</label>
-                 <input type="text" value={"http://localhost:3000/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink"  disabled />
+                                        <p class="is-size-5">Teams</p>
+                                        <label> Create New Team:</label>
+                                         <input type="text" id="teamName" value={this.state.teamName} onChange={this.changeAttribute} />
 
-                 <br/>
-                 <br/>
+                                         <input type="button" value="Create Team" onClick={this.addTeam} />
+                                         <br/>
 
-                 <input type="button" value="Tryout Evaluation" onClick={this.buttonClicked} />
-
-                 </form>
-               </div>
-               <div className="addExec">
-                <h1>Executives</h1>
-                <label> Additional Executive (Email):</label>
-                 <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
-
-                 <input type="button" value="Add Executive" onClick={this.addExecutive} />
-                 <br/>
-
-               </div>
-             <div className="newTeam">
-                <h1>Teams</h1>
-                <label> Create New Team:</label>
-                 <input type="text" id="teamName" value={this.state.teamName} onChange={this.changeAttribute} />
-
-                 <input type="button" value="Create Team" onClick={this.addTeam} />
-                 <br/>
-
-                 <List className="teamList">
-
-                    {this.state.teamIDs.map(
-                            (id) =>
-                                <ListItem key={id} >
-                                    <Link to="/BuildTeam" onClick={this.teamClicked} id={id} className="teamListLinks">
-                                        {this.state.teamNames[this.state.teamIDs.indexOf(id)] }
-                                    </Link>
-                                </ListItem>
-                        )
-                    }
-                    </List>
-
-               </div>
-
-               {
-               /*
-                <div className="tryoutEdit">
-                    <h1>Sessions</h1>
-
-                 <form>
-                 <label>Start Date and Time:</label>
-                    <DatePicker selected={this.state.startTime} onChange={this.changeStartTime}  dateFormat="MMMM/d/yyyy-h:mm"
-    />
-                 <br/>
-
-                 <label> End Date and Time:</label>
-                 <input type="datetime-local" id="dateTimeEnd" value="${this.state.endTime}" onChange={this.changeAttribute} />
-                 <br/>
-                 <br/>
-                 <label> Location:</label>
-                 <input type="text" id="location" value={this.state.location} onChange={this.changeAttribute} />
-
-                 <br/>
-                 <input type="button" value="Add Session" onClick={this.addSession} />
-                 <br/>
-                             
-                 <h1>Executives</h1>
-                 
-                 <label> Additional Executive (Email):</label>
-                 <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
-
-                 <input type="button" value="Add Executive" onClick={this.addExecutive1} />
-                 <br/>
-                 
-
-                 </form>
-               </div>*/}
-
-           </div>
+                                         <List>
+                                            {this.state.teamIDs.map(
+                                                    (id) =>
+                                                        <ListItem key={id} >
+                                                            <Link  class="has-text-centered is-size-5" to="/BuildTeam" onClick={this.teamClicked} id={id}>
+                                                                {this.state.teamNames[this.state.teamIDs.indexOf(id)] }
+                                                            </Link>
+                                                        </ListItem>
+                                                )
+                                            }
+                                         </List>
+                                </div>
+                            </div>
+                            <div className="column">
+                                <div className="notification has-background-black">
+                                    <p className="is-size-3">Player List</p>
+                                        <List className="is-size-5">
+                                            {this.state.playerIDs.map(
+                                                    (id) =>
+                                                        <ListItem class="has-text-centered" selected={this.state.selected === id} key={id} id={id}>
+                                                            {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                                        </ListItem>
+                                                )
+                                            }
+                                        </List>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+            </>
         );
     }
 

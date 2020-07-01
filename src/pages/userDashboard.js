@@ -1,10 +1,7 @@
 import React from 'react';
-import { GlobalStyles } from '../global';
-import logo from '../DreamTeamLogo.PNG';
-import smallLogo from '../DreamTeamLogo_small.PNG';
-import { TopNav } from '../components/TopNav';
 import {urlAPI} from "../Constants";
 import {Link} from 'react-router-dom';
+import 'bulma/css/bulma.css';
  
 class UserDashboard extends React.Component {
 	constructor(props){
@@ -15,7 +12,6 @@ class UserDashboard extends React.Component {
 	setTryoutID = (event) => {
 		localStorage.setItem('currentTryoutID', event.target.id);
 		localStorage.setItem('currentTryoutName', event.target.name);
-
 	}
 
 	TryoutList = () => {
@@ -43,18 +39,37 @@ class UserDashboard extends React.Component {
 
 	render(){
 		return (
-		   <div>
-		   <img src={logo} className="bg_lower" alt="logo" />
-
-			<TopNav />
-
-		    <div className="text-block-a">
-			   <h1>Active Tryouts for {this.props.userFirstName}
-				<this.TryoutList userID={this.props.userID} />
-			   </h1>
-		    </div>
-
-		   </div>
+			<div>
+				<section className="section has-background-black">
+					<div className="container">
+						<p className="is-size-1">Hey {this.props.userFirstName}! Welcome back to DreamTeam!</p>
+					</div>
+				</section>
+				<section className="section has-background-black">
+					<div className="container">
+						<div className="columns">
+							<div className="column">
+								<div class="notification has-background-black">
+									<h class="is-size-3">Upcoming Sessions</h>
+								</div>
+							</div>
+							<div className="column">
+								<div className="notification has-background-black">
+									<h class="is-size-3">Active Tryouts</h>
+									<p class="is-size-4">
+										<this.TryoutList userID={this.props.userID}/>
+									</p>
+								</div>
+							</div>
+							<div className="column">
+								<div className="notification has-background-black">
+									<p class="is-size-3">Closed Tryouts</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
 		);
 	}
 }

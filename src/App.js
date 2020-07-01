@@ -23,8 +23,7 @@ import {tryoutSignUp} from './pages/tryoutSignUp'
 import {signUpSuccess} from './pages/signupSuccessful'
 import {TryoutDashboard} from './pages/tryoutDashboard'
 import {urlAPI} from "./Constants";
-
-
+import "bulma/css/bulma.css";
 
 
 function App() {
@@ -53,14 +52,20 @@ function App() {
 				});
   }
 
+  function signOut(){
+    localStorage.clear();
+    return (
+				<Redirect to={'/'}/>
+			);
+  }
 
   return (
-    
-  
-
     <ThemeProvider theme={theme}>
-      <>
         <GlobalStyles />
+          <div className='burgerMenu' ref={node}>
+            <Burger open={open} setOpen={setOpen} />
+            <Menu open={open} setOpen={setOpen} />
+          </div>
         <div>
           <Router>
             <Switch>
@@ -69,26 +74,19 @@ function App() {
               <Route exact path= "/SignIn" render={(props) => <SignInForm completeLogin={completeLogin} />} />
               <Route exact path= "/SignUp" component={SignUpForm} />
               <Route exact path= "/FindATryout" component={Findatryout}/>
-              <Route exact path= "/user" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
+              <Route exact path= "/Dashboard" render={(props) => <UserDashboard userFirstName={userFirstName} userID={userID} />} />
               <Route exact path= "/CreateATryout" render={(props) => <CreateATryout userID={userID} />} />
               <Route exact path= "/BuildTeam" component={BuildTeam}/>
               <Route exact path= "/TryoutEvaluation" component={TryoutEvaluation}/>
               <Route exact path= "/TryoutSignUp/:tryoutID" component={tryoutSignUp}/>
               <Route exact path= "/SignupSuccessful" component={signUpSuccess}/>
               <Route exact path= "/TryoutDashboard" component={TryoutDashboard}/>
+              <Route exact path= "/SignOut" component={signOut}/>
               
               <Route component={NotFound} />
             </Switch>
           </Router>
-          
-          
         </div>
-        <div ref={node}>
-          <Burger open={open} setOpen={setOpen} />
-          <Menu open={open} setOpen={setOpen} />
-        </div>
-      
-      </>
     </ThemeProvider>
   );
 }

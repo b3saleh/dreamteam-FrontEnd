@@ -35,7 +35,7 @@ class SignInForm extends React.Component {
 	render() {
 		if (this.state.userID){
 			return (
-				<Redirect to={'/user'}/>
+				<Redirect to={'/Dashboard'}/>
 			);
 		}
 		return (
@@ -51,7 +51,7 @@ class SignInForm extends React.Component {
 						<input type="password" value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
 
 						<br/>
-						<input type="button" value="Submit" onClick={this.checkUser}/>
+						<input type="button" value="Sign In" onClick={this.checkUser}/>
 
 						<br/>
 					</form>
