@@ -99,13 +99,6 @@
   background: white;
 }
 
-.checkBoxes: hover{
-  color:#ffde59;
-  border:#ffde59;
-  border-width: 3px;
-  background: black;
-}
-
 .team_list{
   background:  black;
   color: rgba(255,222,89,0.95)
