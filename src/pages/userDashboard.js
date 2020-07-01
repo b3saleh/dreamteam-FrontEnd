@@ -41,7 +41,7 @@ class UserDashboard extends React.Component {
 		return (
 			<div>
 				<section className="section has-background-black">
-					<div className="container">
+					<div className="container is-vcentered">
 						<p className="is-size-1">Hey {this.props.userFirstName}! Welcome back to DreamTeam!</p>
 					</div>
 				</section>
@@ -51,12 +51,15 @@ class UserDashboard extends React.Component {
 							<div className="column">
 								<div class="notification has-background-black">
 									<h class="is-size-3">Upcoming Sessions</h>
+									<p className="is-size-5">
+										You have no Upcoming Sessions
+									</p>
 								</div>
 							</div>
 							<div className="column">
 								<div className="notification has-background-black">
 									<h class="is-size-3">Active Tryouts</h>
-									<p class="is-size-4">
+									<p class="is-size-5">
 										<this.TryoutList userID={this.props.userID}/>
 									</p>
 								</div>
@@ -64,6 +67,9 @@ class UserDashboard extends React.Component {
 							<div className="column">
 								<div className="notification has-background-black">
 									<p class="is-size-3">Closed Tryouts</p>
+									<p className="is-size-5">
+										You have no closed Tryouts
+									</p>
 								</div>
 							</div>
 						</div>

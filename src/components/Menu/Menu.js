@@ -44,9 +44,6 @@ const Menu = ({ open, ...props }) => {
       <a href="/SignIn" >
         Sign In
       </a>
-      <a href="/Findatryout" >
-        Find A Tryout
-      </a>
 
     </StyledMenu>
   )

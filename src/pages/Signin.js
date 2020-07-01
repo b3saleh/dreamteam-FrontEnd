@@ -40,8 +40,8 @@ class SignInForm extends React.Component {
 		}
 		return (
 			<div>
-				<img src={logo} className="bg" alt="logo"/>
-				<div className="text-block">
+				{/*<img src={logo} className="bg" alt="logo"/>*/}
+				<div className="column">
 					<h1>Sign In</h1>
 					<form>
 						{this.state.redirect}

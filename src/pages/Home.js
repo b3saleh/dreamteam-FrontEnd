@@ -10,8 +10,8 @@ export const Home = () => {
     }
 
     return (
-       <section class="hero is-fullheight">
-           <div class="container">
+       <section class="section">
+           <div class="container is-vcentered">
             <img src={logo} className="App-logo" alt="logo"/>
            </div>
        </section>

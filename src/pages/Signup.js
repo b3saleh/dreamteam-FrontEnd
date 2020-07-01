@@ -47,8 +47,8 @@ class SignUpForm extends React.Component {
 		}
 		return (
 		   <div>
-			<img src={logo} className="bg" alt="logo" />
-			 <div class="text-block">
+			{/*<img src={logo} className="bg" alt="logo" />*/}
+			 <div class="column">
 				 <h1>Sign Up</h1>
 				 <form>
 					 <input type="text" id="firstName" value={this.state.firstName} onChange={this.changeAttribute} placeholder= "First Name" />
