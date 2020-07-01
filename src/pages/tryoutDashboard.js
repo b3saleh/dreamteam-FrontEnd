@@ -167,28 +167,23 @@ class TryoutDashboard extends React.Component {
                                     <h className="is-size-3">Tryout Info</h>
                                           <form>
                                           <label> Tryout Name:</label>
-                                          <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} disabled/>
+                                          <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} readOnly/>
 
                                          <br/>
                                           <label> Evaluation Criterion 1:</label>
-                                          <input type="text" id="criterion1Name" value={this.state.criteriaNames[0]} disabled />
+                                          <input type="text" id="criterion1Name" value={this.state.criteriaNames[0]} readOnly/>
 
                                           <br/>
                                           <label> Evaluation Criterion 2:</label>
-                                          <input type="text" id="criterion2Name" value={this.state.criteriaNames[1]} disabled />
+                                          <input type="text" id="criterion2Name" value={this.state.criteriaNames[1]} readOnly/>
 
                                           <br/>
                                           <label> Evaluation Criterion 3:</label>
-                                          <input type="text" id="criterion3Name" value={this.state.criteriaNames[2]} disabled />
+                                          <input type="text" id="criterion3Name" value={this.state.criteriaNames[2]} readOnly/>
 
 
                                           <label> Player Sign Up Form:</label>
-                                          <input type="text" value={"http://localhost:3000/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink"  disabled />
-
-                                          <br/>
-                                          <br/>
-
-                                          <input type="button" value="Tryout Evaluation" onClick={this.buttonClicked} />
+                                          <input type="text" value={"http://dreamteamulti.herokuapp.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
 
                                           </form>
                                 </div>
@@ -196,31 +191,42 @@ class TryoutDashboard extends React.Component {
                             <div className="column">
                                 <div className="notification has-background-black">
                                     <h className="is-size-3">Actions</h>
-                                        <p className="is-size-5">Executives</p>
-                                            <label> Add Executive (Email):</label>
-                                            <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
+                                    <p>
+                                        <br/>
+                                        <input type="button" value="Start Evaluating" onClick={this.buttonClicked} />
+                                    </p>
 
-                                            <input type="button" value="Add Executive" onClick={this.addExecutive} />
-                                            <br/>
-
-                                        <p class="is-size-5">Teams</p>
-                                        <label> Create New Team:</label>
-                                         <input type="text" id="teamName" value={this.state.teamName} onChange={this.changeAttribute} />
-
-                                         <input type="button" value="Create Team" onClick={this.addTeam} />
-                                         <br/>
+                                        <p class="is-size-4">
+                                        <br/>
+                                            Manage Teams
+                                        </p>
 
                                          <List>
                                             {this.state.teamIDs.map(
                                                     (id) =>
-                                                        <ListItem key={id} >
-                                                            <Link  class="has-text-centered is-size-5" to="/BuildTeam" onClick={this.teamClicked} id={id}>
+                                                        <ListItem class="has-text-centered" key={id} >
+                                                            <Link  class="is-size-5" to="/BuildTeam" onClick={this.teamClicked} id={id}>
                                                                 {this.state.teamNames[this.state.teamIDs.indexOf(id)] }
                                                             </Link>
                                                         </ListItem>
                                                 )
                                             }
                                          </List>
+
+                                        <label> Create New Team:</label>
+                                         <input type="text" id="teamName" value={this.state.teamName} onChange={this.changeAttribute} />
+
+                                         <input type="button" value="Create Team" onClick={this.addTeam} />
+
+                                        <p className="is-size-5">
+                                        <br/>
+                                            Add Executives
+                                        </p>
+                                            <label> Email:</label>
+                                            <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
+
+                                            <input type="button" value="Add Executive" onClick={this.addExecutive} />
+                                            <br/>
                                 </div>
                             </div>
                             <div className="column">
@@ -229,7 +235,7 @@ class TryoutDashboard extends React.Component {
                                         <List className="is-size-5">
                                             {this.state.playerIDs.map(
                                                     (id) =>
-                                                        <ListItem class="has-text-centered" selected={this.state.selected === id} key={id} id={id}>
+                                                        <ListItem class="has-text-centered">
                                                             {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
                                                         </ListItem>
                                                 )
