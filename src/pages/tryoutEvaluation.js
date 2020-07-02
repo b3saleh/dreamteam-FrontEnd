@@ -1,26 +1,11 @@
 import React from 'react';
 import smallLogo from '../DreamTeamLogo_small.PNG'
-import { GlobalStyles } from '../global';
 import logo from '../DreamTeamLogo.PNG';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import GaugeChart from 'react-gauge-chart';
-import {TopNav} from '../components/TopNav';
 import {urlAPI} from "../Constants";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    float:"right",
-    left:0,
-    height: '100%',
-    maxWidth: 300,
-    backgroundColor: 'black',
-  },
-}));
 
 
 class EvalGauge extends React.Component{
@@ -36,15 +21,15 @@ class EvalGauge extends React.Component{
 
     render() {
         return(
-             <div className="gauges">
-                 <h4> {this.props.name}</h4>
+             <div class="column is-narrow-desktop">
+                 <p class="is-size-4"> {this.props.name}</p>
                   <GaugeChart id={this.props.name}
                     nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
                     percent={(this.props.grade / 5) - 0.1}
-                />
-                 <button onClick={this.handleMinusClick} disabled={this.props.grade < 2}>-</button>
-                 <button onClick={this.handlePlusClick} disabled={this.props.grade > 4}>+</button>
+                  />
+                 <input type="button" value="-" style={{margin:5}} onClick={this.handleMinusClick} disabled={this.props.grade < 2}/>
+                 <input type="button" value="+" style={{margin:5}} onClick={this.handlePlusClick} disabled={this.props.grade > 4}/>
              </div>
             );
     }
@@ -64,10 +49,6 @@ class EvalComments extends React.Component{
                 (result) => {
                  this.setState({savedComments: result.comments})
                  this.setState({commentIDs: result.commentIDs})
-                 this.props.onSelection(result.commentIDs[0]);
-                 
-
-                
                 },
                 (error) => {
                     return <>Error with API call: {getCommentsUrl}</>;
@@ -99,81 +80,21 @@ class EvalComments extends React.Component{
     render() {
              
         return(
-             <div className = "Comments">
-             <label> Evaluation Criteria:</label>
+             <div>
+             <label> Comments:</label>
             <input type="text" value={this.state.comment} onChange={this.updateComment}/>
             <input type="button" value="Submit Comment" onClick={this.sendComment}/>
-            <List className="playerList">
-                    {this.state.commentIDs.map(
-                            (id) =>
-                                <ListItem >
-                                    {this.state.savedComments[this.state.commentIDs.indexOf(id)] }
-                                </ListItem>
-                        )
-                    }
-                    </List>
-               
-        
-                
-                        
-            </div>
-
-            
-                                
-            );
-    }
-}
-
-
-
-
-
-class AthleteList extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {playerFirstNames: [], playerLastNames: [], playerIDs: []};
-        const getListUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
-        fetch(getListUrl)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({playerFirstNames: result.playerFirstNames});
-                    this.setState({playerLastNames: result.playerLastNames});
-                    this.setState({playerIDs: result.playerIDs});
-                    this.props.onSelection(result.playerIDs[0]);
-                },
-                (error) => {
-                    return <>Error with API call: {getListUrl}</>;
-                }
-            );
-
-            
-
-
-    }
-
-    buttonClicked = (event) => {
-        this.props.onSelection(event.target.id);
-    }
-
-
-
-    render() {
-        return (
-            <div className="somethingElse">
-                <h1>Athlete List</h1>
                 <List>
-                    {this.state.playerIDs.map(
-                            (id) =>
-                                <ListItem button selected={this.props.selectedPlayer === id} onClick={this.buttonClicked} key={id} id={id}>
-                                    {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
-                                </ListItem>
-                        )
-                    }
+                        {this.state.commentIDs.map(
+                                (id) =>
+                                    <ListItem >
+                                        {this.state.savedComments[this.state.commentIDs.indexOf(id)] }
+                                    </ListItem>
+                            )
+                        }
                 </List>
             </div>
-        );
+            );
     }
 }
 
@@ -181,7 +102,20 @@ class AthleteList extends React.Component {
 class TryoutEvaluation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {criteriaNames: [], criteriaGrades: [], criteriaIDs: [], selectedPlayer: 0}
+        this.state = {criteriaNames: [], criteriaGrades: [], criteriaIDs: [], selectedPlayer: -1, playerFirstNames: [], playerLastNames: [], playerIDs: []}
+        const getPlayersUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getPlayersUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({playerFirstNames: result.playerFirstNames});
+                    this.setState({playerLastNames: result.playerLastNames});
+                    this.setState({playerIDs: result.playerIDs});
+                },
+                (error) => {
+                    return <>Error with API call: {getListUrl}</>;
+                }
+            );
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
 			.then(
@@ -234,9 +168,9 @@ class TryoutEvaluation extends React.Component {
             )
     }
 
-    handleSelection(playerID){
-        this.setState({selectedPlayer: playerID});
-        const getEvalsUrl = urlAPI + "getEvals/?playerID=" + playerID + "&userID=" + localStorage.getItem("userID");
+    handleSelection = (event)  => {
+        this.setState({selectedPlayer: parseInt(event.target.id)});
+        const getEvalsUrl = urlAPI + "getEvals/?playerID=" + event.target.id + "&userID=" + localStorage.getItem("userID");
         fetch(getEvalsUrl)
             .then(res => res.json())
             .then(
@@ -259,27 +193,46 @@ class TryoutEvaluation extends React.Component {
     render() {
         return (
            <div>
-           <img src={smallLogo} className="icon" alt="small_logo" />
-           <img src={logo} className="bg_lower" alt="logo" />
-           <AthleteList selectedPlayer={this.state.selectedPlayer} onSelection={this.handleSelection}/>
-
-
-                <div className="evalGauges">
-				{
-				    this.state.criteriaNames.map(
-				        ( criterion ) => <EvalGauge name={criterion} id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]} grade={this.state.criteriaGrades[this.state.criteriaNames.indexOf(criterion)]} increaseGrade={this.increaseGrade} decreaseGrade={this.decreaseGrade}/> )
-				}
-                </div>
-                <EvalComments selectedPlayer={this.state.selectedPlayer}/>
-
-
-            <TopNav/>
-
-
+               <div class={"columns"}>
+                   <div className="column is-8">
+                       {this.state.selectedPlayer === -1 ?
+                           <div className="is-size-3">
+                               Select A Player
+                           </div>
+                           :
+                           <div class="is-size-3">
+                               {this.state.playerFirstNames[this.state.playerIDs.indexOf(this.state.selectedPlayer)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(this.state.selectedPlayer)]}
+                           </div>
+                       }
+                           <br/>
+                           <div class="columns is-multiline is-centered">
+                           {
+                               this.state.criteriaNames.map(
+                                   (criterion) => <EvalGauge name={criterion}
+                                                             id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]}
+                                                             grade={this.state.criteriaGrades[this.state.criteriaNames.indexOf(criterion)]}
+                                                             increaseGrade={this.increaseGrade}
+                                                             decreaseGrade={this.decreaseGrade}/>)
+                           }
+                       </div>
+                       <EvalComments selectedPlayer={this.state.selectedPlayer}/>
+                   </div>
+                   <div class="column">
+                        <p class="is-size-3">Athlete List</p>
+                        <List>
+                            {this.state.playerIDs.map(
+                                (id) =>
+                                    <ListItem button selected={this.props.selectedPlayer === id} onClick={this.handleSelection} key={id} id={id}>
+                                        {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                    </ListItem>
+                                )
+                            }
+                        </List>
+                   </div>
+               </div>
            </div>
         );
     }
-
 }
  
 export { TryoutEvaluation };

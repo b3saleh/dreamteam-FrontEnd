@@ -61,6 +61,11 @@ function App() {
             <Burger open={open} setOpen={setOpen} />
             <Menu open={open} setOpen={setOpen} />
           </div>
+        <div class="hero">
+          <div class="hero-body has-background-warning has-text-black is-size-3" style={{padding:20, marginBottom:20}}>
+            DreamTeam
+          </div>
+        </div>
         <div>
           <Router>
             <Switch>
@@ -82,6 +87,11 @@ function App() {
             </Switch>
           </Router>
         </div>
+      <div className="footer has has-background-black" style={{padding:0, margin:0}}>
+        <div className="content has-text-warning is-size-6">
+          Good Luck At Tryouts!
+        </div>
+      </div>
     </ThemeProvider>
   );
 }

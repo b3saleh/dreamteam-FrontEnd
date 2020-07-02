@@ -10,7 +10,24 @@ import {Link} from 'react-router-dom';
 class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {updateRequired: true, buttonClicked: false,criteriaNames: [], tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false,index: 0, name: '', playerFirstNames: [], playerLastNames: [], playerIDs: [], selected: 0,startTime:"" ,endTime:new Date(), executive:"", teamName:"", teamNames: [], teamIDs: []};
+        this.state = {
+            updateRequired: true,
+            buttonClicked: false,
+            criteriaNames: [],
+            tryoutName: "",
+            createSuccess: false,
+            index: 0,
+            name: '',
+            playerFirstNames: [],
+            playerLastNames: [],
+            playerIDs: [],
+            selected: 0,
+            startTime:"" ,
+            endTime:new Date(),
+            executive:"",
+            teamName:"",
+            teamNames: [],
+            teamIDs: []};
     }
 
     updateAPICalls = () => {
@@ -169,19 +186,15 @@ class TryoutDashboard extends React.Component {
                                           <label> Tryout Name:</label>
                                           <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} readOnly/>
 
-                                         <br/>
-                                          <label> Evaluation Criterion 1:</label>
-                                          <input type="text" id="criterion1Name" value={this.state.criteriaNames[0]} readOnly/>
-
-                                          <br/>
-                                          <label> Evaluation Criterion 2:</label>
-                                          <input type="text" id="criterion2Name" value={this.state.criteriaNames[1]} readOnly/>
-
-                                          <br/>
-                                          <label> Evaluation Criterion 3:</label>
-                                          <input type="text" id="criterion3Name" value={this.state.criteriaNames[2]} readOnly/>
-
-
+                                          {
+                                              this.state.criteriaNames.map((criterion, idx) => (
+                                                  <>
+                                                    <br/>
+                                                    <label> Evaluation Criterion {idx + 1}:</label>
+                                                    <input type="text" id={"criterion" + idx + "Name"} value={criterion} readOnly/>
+                                                  </>
+                                              ))
+                                          }
                                           <label> Player Sign Up Form:</label>
                                           <input type="text" value={"http://dreamteamulti.herokuapp.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
 

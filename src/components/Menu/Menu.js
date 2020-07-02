@@ -10,8 +10,8 @@ const Menu = ({ open, ...props }) => {
         return (
             <StyledMenu open={open} aria-hidden={!isHidden} {...props}>
 
-                <a href="/" >
-                    Home
+                <a href="/Dashboard" >
+                    Dashboard
                 </a>
                 {localStorage.getItem("currentTryoutID") ?
                 <a href="/TryoutDashboard">

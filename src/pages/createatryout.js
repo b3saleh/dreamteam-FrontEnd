@@ -61,7 +61,7 @@ class CreateATryout extends React.Component {
 
     render(){
         if(this.state.createSuccess){
-			return <Redirect to={'/user'} />
+			return <Redirect to={'/Dashboard'} />
 		}
         return (
 
