@@ -1,20 +1,14 @@
 import React from 'react';
-import smallLogo from '../DreamTeamLogo_small.PNG'
-import { GlobalStyles } from '../global';
-import logo from '../DreamTeamLogo.PNG';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox'
-import { FixedSizeList } from 'react-window';
 import GaugeChart from 'react-gauge-chart';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
-import {TopNav} from '../components/TopNav';
 import {urlAPI} from "../Constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,8 +54,8 @@ function DTCheckBox(props) {
                   tabIndex={-1}
                   disableRipple
                   inputProps={{ 'aria-labelledby': labelId }}
-                  color='yellow'
                   id={props.id}
+                  color={"yellow"}
                   onClick={props.onToggle}
                 />
               </ListItemIcon>
@@ -73,36 +67,26 @@ class EvalGauge extends React.Component{
 
     render() {
         return(
-             <div className="gauges">
-                 <h4> {this.props.name}</h4>
-                  <GaugeChart id={this.props.name}
+            <div className="column is-narrow-desktop">
+                <p className="is-size-4"> {this.props.name}</p>
+                <GaugeChart
+                    id={this.props.name}
                     nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
                     percent={(this.props.average / 5) - 0.1}
-                  />
+                />
              </div>
             );
     }
 }
 
-
-class TransferList extends React.Component {
-    constructor(props){
+class TeamPlayerList extends React.Component {
+    constructor(props) {
         super(props);
-        this.state = {availableChecked: [], teamChecked: [], checked: []};
+        this.state = {teamChecked: []};
     }
 
-  handleToggle = (event) => {
-    if (this.props.availablePlayerIDs.indexOf(parseInt(event.target.id)) > -1){
-        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
-        let newChecked = [...this.state.availableChecked];
-        if (currentIndex === -1) {
-          newChecked.push(event.target.id);
-        } else {
-          newChecked.splice(currentIndex, 1);
-        }
-        this.setState({availableChecked: newChecked});
-    } else if (this.props.teamPlayerIDs.indexOf(parseInt(event.target.id)) > -1) {
+    handleToggle = (event) => {
         let currentIndex = this.state.teamChecked.indexOf(event.target.id);
         let newChecked = [...this.state.teamChecked];
         if (currentIndex === -1) {
@@ -111,113 +95,90 @@ class TransferList extends React.Component {
           newChecked.splice(currentIndex, 1);
         }
         this.setState({teamChecked: newChecked});
+    };
+
+    handleRemove = () => {
+        this.props.removePlayers(this.state.teamChecked);
+    };
+
+    render() {
+        return(
+            <>
+            <h1>Team</h1>
+            { this.props.teamPlayerIDs.map(
+              (id) =>
+                  <>
+                    <Paper className={useStyles.paper}>
+                          <List className= "team_list" dense component="div" role="list">
+                            <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                              <ListItemIcon>
+                                <DTCheckBox onToggle={this.handleToggle}
+                                  id={id}
+                                  checkedBool={this.state.teamChecked.indexOf(id.toString()) !== -1} />
+                              </ListItemIcon>
+                              <ListItemText primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + " " + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
+                            </ListItem>
+                          </List>
+                      </Paper>
+                  </>
+              )
+            }
+            <input
+                type="button"
+                value="Remove Selected"
+                onClick={this.handleRemove}
+              />
+            </>
+        )
     }
-  };
 
-  handleRemoveAll = () => {
-    this.props.clearTeam();
-  };
 
-  handleRemove = () => {
-    this.props.removePlayers(this.state.teamChecked);
+}
+
+class AvailablePlayerList extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {availableChecked: []};
+    }
+
+  handleToggle = (event) => {
+        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
+        let newChecked = [...this.state.availableChecked];
+        if (currentIndex === -1) {
+          newChecked.push(event.target.id);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+        this.setState({availableChecked: newChecked});
   };
 
   handleAdd = () => {
     this.props.addPlayers(this.state.availableChecked);
   };
 
-  availableList = () => (
-      this.props.availablePlayerIDs.map(
-          (id) =>
-                <ListItem key={id} id={id} role="listitem">
-                  <ListItemIcon>
-                    <DTCheckBox onToggle={this.handleToggle}
-                      id={id}
-                      checkedBool={this.state.availableChecked.indexOf(id.toString()) !== -1}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + " " + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
-                </ListItem>
-              )
-  );
-
-  teamList = () => (
-      this.props.teamPlayerIDs.map(
-          (id) =>
-                <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
-                  <ListItemIcon>
-                    <DTCheckBox onToggle={this.handleToggle}
-                      id={id}
-                      checkedBool={this.state.teamChecked.indexOf(id.toString()) !== -1} />
-                  </ListItemIcon>
-                  <ListItemText primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + " " + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
-                </ListItem>
-              )
-  );
-
   render() {
       return (
-        <Grid container spacing={2} justify="center" alignItems="stretch" className={useStyles.root}>
-
-          <Grid item className="leftList">
-            <h1> Athletes</h1>
-                <Paper className={useStyles.paper}>
-                  <List className= "team_list" dense component="div" role="list">
-                        <this.availableList />
-                  </List>
-              </Paper>
-
-          </Grid>
-
-          <Grid item>
-            <Grid container direction="column" alignItems="stretch">
-            <Button
-                variant="contained"
-                size="small"
-                className="addPlayer"
-                color="white"
+        <>
+        <h1>Available</h1>
+            {
+                this.props.availablePlayerIDs.map(
+                  (id) =>
+                        <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                          <ListItemIcon>
+                            <DTCheckBox onToggle={this.handleToggle}
+                              id={id}
+                              checkedBool={this.state.availableChecked.indexOf(id.toString()) !== -1} />
+                          </ListItemIcon>
+                          <ListItemText primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + " " + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
+                        </ListItem>
+              )
+            }
+            <input
+                type="button"
+                value="Add Selected"
                 onClick={this.handleAdd}
-                disabled={this.state.availableChecked.length === 0}
-                aria-label="move selected left"
-              >
-                Add
-              </Button>
-
-              <Button
-                variant="contained"
-                color="white"
-                size="small"
-                className="removePlayer"
-                onClick={this.handleRemove}
-                disabled={this.state.teamChecked.length === 0}
-                aria-label="move selected right"
-              >
-                Remove
-              </Button>
-
-               <Button
-                variant="contained"
-                size="small"
-                className="clrList"
-                onClick={this.handleRemoveAll}
-                disabled={this.props.teamPlayerIDs.length === 0}
-                aria-label="move all right"
-              >
-                Clear Team
-              </Button>
-
-
-            </Grid>
-          </Grid>
-        <Grid item className="rightList">
-          <h1> Team</h1>
-            <Paper className={useStyles.paper}>
-                  <List className= "team_list" dense component="div" role="list">
-                        <this.teamList />
-                  </List>
-              </Paper>
-        </Grid>
-        </Grid>
+              />
+            </>
       );
   }
 }
@@ -355,30 +316,35 @@ class BuildTeam extends React.Component {
         }
         return (
            <div>
-           <img src={smallLogo} className="icon" alt="small_logo" />
-           <img src={logo} className="bg_lower" alt="logo" />
-           <TransferList clearTeam={this.clearTeam} addPlayers={this.addPlayers} removePlayers={this.removePlayers} availablePlayerIDs={this.state.availablePlayerIDs} availablePlayerFirstNames={this.state.availablePlayerFirstNames} availablePlayerLastNames={this.state.availablePlayerLastNames}  teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames} />
+               <div class="columns">
+                   <div className="column is-3">
+                       <AvailablePlayerList addPlayers={this.addPlayers}  availablePlayerIDs={this.state.availablePlayerIDs} availablePlayerFirstNames={this.state.availablePlayerFirstNames} availablePlayerLastNames={this.state.availablePlayerLastNames}/>
+                   </div>
+                   <div className="column is-6">
+                       <div className="columns is-multiline is-centered">
+                           {
+                               this.state.teamPlayerIDs.length > 1
+                                   ?
+                                   this.state.criteriaNames.map(
+                                       (criterion) =>
+                                           <EvalGauge
+                                               name={criterion}
+                                               id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]}
+                                               average={this.state.criteriaAverages[this.state.criteriaNames.indexOf(criterion)]}
+                                           />
+                                   )
 
-                <div className="evalGauges">
-				{
-				    this.state.teamPlayerIDs.length > 1
-                        ?
-                        this.state.criteriaNames.map(
-                            ( criterion ) =>
-                                <EvalGauge
-                                    name={criterion}
-                                    id={this.state.criteriaIDs[this.state.criteriaNames.indexOf(criterion)]}
-                                    average={this.state.criteriaAverages[this.state.criteriaNames.indexOf(criterion)]}
-                                />
-                        )
+                                   :
+                                   <h1>Add At Least Two Players to The Team To See Averages</h1>
 
-                        :
-                        <h1>Add At Least Two Players to The Team To See Averages</h1>
+                           }
+                       </div>
+                   </div>
+                   <div className="column is-3">
+                       <TeamPlayerList removePlayers={this.removePlayers} teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames}/>
+                   </div>
+               </div>
 
-                }
-                </div>
-
-                <TopNav/>
 
            </div>
         );

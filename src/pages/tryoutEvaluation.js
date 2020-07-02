@@ -1,7 +1,4 @@
 import React from 'react';
-import smallLogo from '../DreamTeamLogo_small.PNG'
-import logo from '../DreamTeamLogo.PNG';
-import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import GaugeChart from 'react-gauge-chart';
