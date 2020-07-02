@@ -7,14 +7,6 @@ class UserDashboard extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {userID: "", tryoutList: [], tryoutIDs: []};
-	}
-
-	setTryoutID = (event) => {
-		localStorage.setItem('currentTryoutID', event.target.id);
-		localStorage.setItem('currentTryoutName', event.target.name);
-	}
-
-	TryoutList = () => {
 		const getListUrl = urlAPI + "listTryouts/?userID=" + this.props.userID;
         fetch(getListUrl)
 			.then(
@@ -30,11 +22,11 @@ class UserDashboard extends React.Component {
 					return <>Error with API call: {getListUrl}</>;
 				}
 			);
-		return (
-			<>
-				{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/TryoutDashboard'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} name={tryout} onClick={this.setTryoutID}>{tryout}</Link></li>)}
-			</>
-		);
+	}
+
+	setTryoutID = (event) => {
+		localStorage.setItem('currentTryoutID', event.target.id);
+		localStorage.setItem('currentTryoutName', event.target.name);
 	}
 
 	render(){
@@ -60,7 +52,18 @@ class UserDashboard extends React.Component {
 								<div className="notification has-background-black">
 									<h class="is-size-3">Active Tryouts</h>
 									<p class="is-size-5">
-										<this.TryoutList userID={this.props.userID}/>
+										{this.state.tryoutList.length > 0 ?
+											<>
+												{this.state.tryoutList.map(( tryout ) => <li key={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]}><Link to={'/TryoutDashboard'} id={this.state.tryoutIDs[this.state.tryoutList.indexOf(tryout)]} name={tryout} onClick={this.setTryoutID}>{tryout}</Link></li>)}
+											</>
+											:
+											<>
+												You have no Active Tryouts, create one
+												<a href="/CreateATryout">
+													Here
+												</a>
+											</>
+										}
 									</p>
 								</div>
 							</div>

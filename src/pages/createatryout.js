@@ -4,12 +4,21 @@ import logo from '../DreamTeamLogo.PNG';
 import { TopNav } from '../components/TopNav';
 import {urlAPI} from '../Constants';
 import {Redirect} from "react-router-dom";
+import {forEach} from "react-bootstrap/cjs/ElementChildren";
 
 
 class CreateATryout extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {tryoutName: "", criterion1Name: "", criterion2Name: "", criterion3Name: "", createSuccess: false};
+        this.state = {
+            tryoutName: "",
+            numberOfCriteria: 1,
+            criteriaNames: [""],
+            createSuccess: false};
+    }
+
+    handleAddCriterion = (event) => {
+        this.setState({criteriaNames: this.state.criteriaNames.concat([""])})
     }
 
     changeAttribute = (event) => {
@@ -20,8 +29,24 @@ class CreateATryout extends React.Component {
 		})
 	}
 
+	changeCriterion = (event) => {
+		let newCriteriaNames = this.state.criteriaNames
+        newCriteriaNames[event.target.id] = event.target.value
+        this.setState({ shareholders: newCriteriaNames });
+    }
+
+    handleRemoveCriterion = idx => () => {
+		let newCriteriaNames = this.state.criteriaNames
+        delete newCriteriaNames[idx]
+        this.setState({ shareholders: newCriteriaNames });
+    }
+
 	createTryout = (event) => {
-        const createTryoutUrl = urlAPI + "createTryout/?userID=" + this.props.userID + "&tryoutName=" + this.state.tryoutName + "&criteria=" + this.state.criterion1Name + "&criteria=" + this.state.criterion2Name + "&criteria=" + this.state.criterion3Name
+        let createTryoutUrl = urlAPI + "createTryout/?userID=" + this.props.userID + "&tryoutName=" + this.state.tryoutName;
+        this.state.criteriaNames.forEach(eachCriterion)
+        function eachCriterion(value) {
+          createTryoutUrl += "&criteria=" + value
+        }
         fetch(createTryoutUrl, {method: 'POST'})
 			.then(res => res.json())
 			.then(
@@ -41,10 +66,8 @@ class CreateATryout extends React.Component {
         return (
 
            <div>
-            <img src={logo} className="bg_lower" alt="logo"/>
-            <TopNav />
 
-               <div class="text-block">
+               <div class="column">
                     <h1>Create A Tryout</h1>
 
 
@@ -52,21 +75,26 @@ class CreateATryout extends React.Component {
                  <label> Tryout Name:</label>
                  <input type="text" id="tryoutName" value={this.state.tryoutName} onChange={this.changeAttribute}/>
 
-                 <br/>
-                 <label> Evaluation Criterion 1:</label>
-                 <input type="text" id="criterion1Name" value={this.state.criterion1Name} onChange={this.changeAttribute} />
 
-                 <br/>
-                 <label> Evaluation Criterion 2:</label>
-                 <input type="text" id="criterion2Name" value={this.state.criterion2Name} onChange={this.changeAttribute} />
+                 <br/><br/>
+                 <label> Evaluation Criteria:</label>
+                 <br/><br/>
 
-                 <br/>
-                 <label> Evaluation Criterion 3:</label>
-                 <input type="text" id="criterion3Name" value={this.state.criterion3Name} onChange={this.changeAttribute} />
-
-                 <br/>
+                             {
+                                 this.state.criteriaNames.map((criterion, idx) => (
+                                     <div className={"columns is-vcentered"}>
+                                         <div className={"column is-11"} style={{padding:0, margin:0}}>
+                                            <input type="text" id={idx} value={criterion} onChange={this.changeCriterion} />
+                                         </div>
+                                         <div class={"column"}>
+                                            <input type="button" value="-" onClick={this.handleRemoveCriterion(idx)}/>
+                                         </div>
+                                      </div>
+                                 ))
+                             }
+                     <input type="button" value="Add Criterion" onClick={this.handleAddCriterion} />
+                 <br/><br/>
                  <input type="button" value="Create Tryout" onClick={this.createTryout} />
-
                  </form>
                </div>
            </div>
