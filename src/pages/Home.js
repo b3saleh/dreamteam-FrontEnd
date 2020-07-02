@@ -10,11 +10,9 @@ export const Home = () => {
     }
 
     return (
-       <section class="section">
-           <div class="container is-vcentered">
+        <div>
             <img src={logo} className="App-logo" alt="logo"/>
-           </div>
-       </section>
+        </div>
     );
 }
  

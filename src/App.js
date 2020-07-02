@@ -87,11 +87,6 @@ function App() {
             </Switch>
           </Router>
         </div>
-      <div className="footer has has-background-black" style={{padding:0, margin:0}}>
-        <div className="content has-text-warning is-size-6">
-          Good Luck At Tryouts!
-        </div>
-      </div>
     </ThemeProvider>
   );
 }
