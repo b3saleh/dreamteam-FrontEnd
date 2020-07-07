@@ -62,7 +62,7 @@ function App() {
             <Menu open={open} setOpen={setOpen} />
           </div>
         <div class="hero">
-          <div class="hero-body has-background-warning has-text-black is-size-3" style={{padding:20, marginBottom:20, width:"100vw"}}>
+          <div class="hero-body has-background-warning has-text-black is-size-2" style={{padding:15, marginBottom:20, width:"100vw"}}>
             DreamTeam
           </div>
         </div>
