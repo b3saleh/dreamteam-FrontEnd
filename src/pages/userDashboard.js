@@ -62,9 +62,9 @@ class UserDashboard extends React.Component {
 											</>
 											:
 											<>
-												You have no Active Tryouts, create one
+											{"You have no Active Tryouts, create one "}
 												<a href="/CreateATryout">
-													Here
+													here
 												</a>
 											</>
 										}
