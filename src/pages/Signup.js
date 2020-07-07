@@ -48,7 +48,8 @@ class SignUpForm extends React.Component {
 		return (
 		   <div>
 			{/*<img src={logo} className="bg" alt="logo" />*/}
-			 <div class="column">
+			<div className="columns is-centered">
+				<div className="column" style={{maxWidth:300}}>
 				 <h1>Sign Up</h1>
 				 <form>
 					 <input type="text" id="firstName" value={this.state.firstName} onChange={this.changeAttribute} placeholder= "First Name" />
@@ -67,7 +68,8 @@ class SignUpForm extends React.Component {
 
 					</form>
 
-			 </div>
+			 	</div>
+			</div>
 
 		   </div>
 		);

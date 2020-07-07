@@ -41,20 +41,22 @@ class SignInForm extends React.Component {
 		return (
 			<div>
 				{/*<img src={logo} className="bg" alt="logo"/>*/}
-				<div className="column">
-					<h1>Sign In</h1>
-					<form>
-						{this.state.redirect}
-						<input type="text" value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
+       			<div className="columns is-centered">
+					<div className="column" style={{maxWidth:300}}>
+						<h1>Sign In</h1>
+						<form>
+							{this.state.redirect}
+							<input type="text" value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
 
-						<br/>
-						<input type="password" value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
+							<br/>
+							<input type="password" value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
 
-						<br/>
-						<input type="button" value="Sign In" onClick={this.checkUser}/>
+							<br/>
+							<input type="button" value="Sign In" onClick={this.checkUser}/>
 
-						<br/>
-					</form>
+							<br/>
+						</form>
+					</div>
 				</div>
 
 
