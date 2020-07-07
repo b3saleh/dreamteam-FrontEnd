@@ -6,6 +6,7 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     height: 100%;
     min-height: 100%;
+    background-color: black;
   }
   *, *::after, *::before {
     box-sizing: border-box;

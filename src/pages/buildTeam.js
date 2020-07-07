@@ -5,11 +5,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox'
 import GaugeChart from 'react-gauge-chart';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import {urlAPI} from "../Constants";
+import {Redirect} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,7 +72,7 @@ class EvalGauge extends React.Component{
                     id={this.props.name}
                     nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
-                    percent={(this.props.average / 5) - 0.1}
+                    percent={this.props.average-3}
                 />
              </div>
             );
@@ -99,6 +98,7 @@ class TeamPlayerList extends React.Component {
 
     handleRemove = () => {
         this.props.removePlayers(this.state.teamChecked);
+        this.setState({teamChecked: []});
     };
 
     render() {
@@ -154,6 +154,7 @@ class AvailablePlayerList extends React.Component {
 
   handleAdd = () => {
     this.props.addPlayers(this.state.availableChecked);
+    this.setState({availableChecked: []});
   };
 
   render() {
@@ -186,11 +187,22 @@ class AvailablePlayerList extends React.Component {
 class BuildTeam extends React.Component {
     constructor(props){
         super(props);
-        this.state = {updateRequired: true, teamPlayerFirstNames: [], teamPlayerLastNames: [], teamPlayerIDs: [], availablePlayerIDs: [], availablePlayerFirstNames: [], availablePlayerLastNames: [], criteriaNames: [], criteriaAverages: [], criteriaIDs: []}
+        this.state = {
+            redirect: null,
+            teamPlayerFirstNames: [],
+            teamPlayerLastNames: [],
+            teamPlayerIDs: [],
+            availablePlayerIDs: [],
+            availablePlayerFirstNames: [],
+            availablePlayerLastNames: [],
+            criteriaNames: [],
+            criteriaAverages: [],
+            criteriaIDs: []};
         this.UpdateApiCalls = this.UpdateApiCalls.bind(this);
         this.addPlayers = this.addPlayers.bind(this);
         this.removePlayers = this.removePlayers.bind(this);
         this.clearTeam = this.clearTeam.bind(this);
+        this.deleteTeam = this.deleteTeam.bind(this);
         const listCriteriaUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
             fetch(listCriteriaUrl)
                 .then(res => res.json())
@@ -201,6 +213,7 @@ class BuildTeam extends React.Component {
                             this.setState({criteriaAverages: Array(result.criteriaIDs.length).fill(3)});
                     }
                 );
+        this.UpdateApiCalls()
     }
 
     UpdateApiCalls() {
@@ -246,9 +259,6 @@ class BuildTeam extends React.Component {
                         console.log(criteriaAverages);
                     }
                 );
-        this.setState({updateRequired: false});
-        this.forceUpdate();
-        return <></>
     }
 
     clearTeam = () => {
@@ -260,6 +270,7 @@ class BuildTeam extends React.Component {
                     .then(res => res.json())
                     .then(
                         (result) => {
+                            this.UpdateApiCalls()
                         },
                         (error) => {
                             return <>Error with API call: {removePlayerUrl}</>;
@@ -267,9 +278,7 @@ class BuildTeam extends React.Component {
                     )
             }
         );
-        this.setState({updateRequired: true});
-
-    }
+    };
 
     addPlayers(playerIDList) {
         let addPlayerUrl = "";
@@ -280,6 +289,7 @@ class BuildTeam extends React.Component {
                     .then(res => res.json())
                     .then(
                         (result) => {
+                            this.UpdateApiCalls()
                         },
                         (error) => {
                             return <>Error with API call: {addPlayerUrl}</>;
@@ -287,7 +297,6 @@ class BuildTeam extends React.Component {
                     )
             }
         );
-        this.setState({updateRequired: true});
     }
 
     removePlayers(playerList) {
@@ -299,6 +308,7 @@ class BuildTeam extends React.Component {
                     .then(res => res.json())
                     .then(
                         (result) => {
+                            this.UpdateApiCalls()
                         },
                         (error) => {
                             return <>Error with API call: {removePlayerUrl}</>;
@@ -307,12 +317,26 @@ class BuildTeam extends React.Component {
 
             }
         );
-        this.setState({updateRequired: true});
+    }
+
+    deleteTeam() {
+        let removePlayerUrl = urlAPI + "deleteTeam/?&teamID=" + localStorage.getItem('currentTeamID');
+        fetch(removePlayerUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    localStorage.setItem('currentTeamID', null);
+                    this.setState({redirect: "/TryoutDashboard"});
+                },
+                (error) => {
+                    return <>Error with API call: {removePlayerUrl}</>;
+                }
+            )
     }
 
     render () {
-        if(this.state.updateRequired){
-            return <this.UpdateApiCalls />
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
         }
         return (
            <div>
@@ -339,6 +363,11 @@ class BuildTeam extends React.Component {
 
                            }
                        </div>
+                       <input
+                            type="button"
+                            value="Delete This Team"
+                            onClick={this.deleteTeam}
+                       />
                    </div>
                    <div className="column is-3">
                        <TeamPlayerList removePlayers={this.removePlayers} teamPlayerIDs={this.state.teamPlayerIDs} teamPlayerFirstNames={this.state.teamPlayerFirstNames} teamPlayerLastNames={this.state.teamPlayerLastNames}/>

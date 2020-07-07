@@ -9,12 +9,12 @@ class EvalGauge extends React.Component{
 
     handlePlusClick = () => {
         this.props.increaseGrade(this.props.id);
-    }
+    };
 
     handleMinusClick = () => {
         this.props.decreaseGrade(this.props.id);
 
-    }
+    };
 
     render() {
         return(
@@ -23,7 +23,7 @@ class EvalGauge extends React.Component{
                   <GaugeChart id={this.props.name}
                     nrOfLevels={5}
                     colors={["#fc0f03", "#7de330"]}
-                    percent={(this.props.grade / 5) - 0.1}
+                    percent={this.props.grade - 3}
                   />
                  <input type="button" value="-" style={{margin:5}} onClick={this.handleMinusClick} disabled={this.props.grade < 2}/>
                  <input type="button" value="+" style={{margin:5}} onClick={this.handlePlusClick} disabled={this.props.grade > 4}/>
@@ -36,62 +36,57 @@ class EvalGauge extends React.Component{
 class EvalComments extends React.Component{
     constructor(props){
         super(props);
-        this.state = {comment: "", savedComments:[], commentIDs:[]};
-
-        
-        const getCommentsUrl = urlAPI + "getComments/?playerID=" + this.props.selectedPlayer;
-        fetch(getCommentsUrl)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                 this.setState({savedComments: result.comments})
-                 this.setState({commentIDs: result.commentIDs})
-                },
-                (error) => {
-                    return <>Error with API call: {getCommentsUrl}</>;
-                }
-            );
+        this.state = {comment: ""};
     }
 
     updateComment = (event) => {
         this.setState({comment: event.target.value});
-    }
+    };
 
     sendComment = (event) => {
-        const sendCommentUrl = urlAPI + "postComment/?playerID=" + this.props.selectedPlayer + "&userID=" + localStorage.getItem("userID") + "&commentText=" + this.state.comment;
-        fetch(sendCommentUrl, {method: 'POST'})
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    
-                },
-                (error) => {
-                    // Code if shit hit the fan
-                }
-            );
-        
+        let commentText = encodeURIComponent(this.state.comment.trim());
+
+        this.props.submitComment(commentText);
+
         this.setState({comment: ""});
-    }
-    
+    };
+
+    deleteClicked = (event) => {
+        this.props.deleteComment(event.target.id);
+    };
 
     render() {
-             
         return(
              <div>
-             <label> Comments:</label>
-            <input type="text" value={this.state.comment} onChange={this.updateComment}/>
-            <input type="button" value="Submit Comment" onClick={this.sendComment}/>
-                <List>
-                        {this.state.commentIDs.map(
+                 <p style={{textAlign:"center"}}> Comments:</p>
+                 <List style={{padding:20}}>
+                        {this.props.commentIDs.map(
                                 (id) =>
-                                    <ListItem >
-                                        {this.state.savedComments[this.state.commentIDs.indexOf(id)] }
+                                    <ListItem>
+                                        <div style={{fontWeight:"bold"}}>
+                                            {this.props.commenterFirstNames[this.props.commentIDs.indexOf(id)]} {this.props.commenterLastNames[this.props.commentIDs.indexOf(id)] + ": "}
+                                        </div>
+                                        <div style={{fontStyle:"italic"}}>
+                                            "{this.props.savedComments[this.props.commentIDs.indexOf(id)] }"
+                                        </div>
+                                        <div style={{fontStyle:"italic"}}>
+                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? " - " + this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(11,19) : ""}
+                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? " - " + this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(0,10) : ""}
+                                        </div>
+                                            {parseInt(this.props.commenterIDs[this.props.commentIDs.indexOf(id)]) === parseInt(localStorage.getItem('userID'))
+                                                ?
+                                                <a id={id} onClick={this.deleteClicked}>DELETE</a>
+                                                :
+                                                ""}
                                     </ListItem>
                             )
                         }
-                </List>
+                 </List>
+                 <input type="text" value={this.state.comment} onChange={this.updateComment} style={{width:"80%"}}/>
+                 <br/>
+                 <input type="button" value="Submit Comment" onClick={this.sendComment}/>
             </div>
-            );
+        );
     }
 }
 
@@ -99,7 +94,21 @@ class EvalComments extends React.Component{
 class TryoutEvaluation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {criteriaNames: [], criteriaGrades: [], criteriaIDs: [], selectedPlayer: -1, playerFirstNames: [], playerLastNames: [], playerIDs: []}
+        this.state = {
+            criteriaNames: [],
+            criteriaGrades: [],
+            criteriaIDs: [],
+            selectedPlayer: -1,
+            savedComments:[],
+            commentIDs:[],
+            commenterFirstNames:[],
+            commenterLastNames:[],
+            commenterIDs:[],
+            commentTimes:[],
+            playerFirstNames: [],
+            playerLastNames: [],
+            playerIDs: [],
+            playerTeams: []};
         const getPlayersUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getPlayersUrl)
             .then(res => res.json())
@@ -108,6 +117,7 @@ class TryoutEvaluation extends React.Component {
                     this.setState({playerFirstNames: result.playerFirstNames});
                     this.setState({playerLastNames: result.playerLastNames});
                     this.setState({playerIDs: result.playerIDs});
+                    this.setState({playerTeams: result.playerTeams});
                 },
                 (error) => {
                     return <>Error with API call: {getListUrl}</>;
@@ -123,6 +133,7 @@ class TryoutEvaluation extends React.Component {
 				(result) => {
 					this.setState({criteriaNames: result.criteriaNames});
 					this.setState({criteriaIDs: result.criteriaIDs});
+					this.setState({criteriaGrades: new Array(this.state.criteriaIDs.length).fill(3)});
 				},
 				(error) => {
 					return <>Error with API call: {getListUrl}</>;
@@ -131,6 +142,8 @@ class TryoutEvaluation extends React.Component {
         this.handleSelection = this.handleSelection.bind(this);
         this.decreaseGrade = this.decreaseGrade.bind(this);
         this.increaseGrade = this.increaseGrade.bind(this);
+        this.submitComment = this.submitComment.bind(this);
+        this.deleteComment = this.deleteComment.bind(this);
     }
 
     increaseGrade(criterionID) {
@@ -149,6 +162,62 @@ class TryoutEvaluation extends React.Component {
             )
     }
 
+    submitComment(commentText) {
+        const sendCommentUrl = urlAPI + "postComment/?playerID=" + this.state.selectedPlayer + "&userID=" + localStorage.getItem("userID") + "&commentText=" + commentText;
+        fetch(sendCommentUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    const getCommentsUrl = urlAPI + "getComments/?playerID=" + this.state.selectedPlayer;
+                    fetch(getCommentsUrl)
+                        .then(res => res.json())
+                        .then(
+                            (result) => {
+                             this.setState({savedComments: result.comments});
+                             this.setState({commentIDs: result.commentIDs});
+                             this.setState({commenterFirstNames: result.commenterFirstNames});
+                             this.setState({commenterLastNames: result.commenterLastNames});
+                             this.setState({commentTimes: result.commentTimes});
+                             this.setState({commenterIDs: result.commenterIDs});
+                            },
+                            (error) => {
+                                return <>Error with API call: {getCommentsUrl}</>;
+                            }
+                        );
+                },
+                (error) => {
+                }
+            );
+    }
+
+    deleteComment(commentID){
+        const deleteCommentUrl = urlAPI + "deleteComment/?commentID=" + commentID;
+        fetch(deleteCommentUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    const getCommentsUrl = urlAPI + "getComments/?playerID=" + this.state.selectedPlayer;
+                    fetch(getCommentsUrl)
+                        .then(res => res.json())
+                        .then(
+                            (result) => {
+                             this.setState({savedComments: result.comments});
+                             this.setState({commentIDs: result.commentIDs});
+                             this.setState({commenterFirstNames: result.commenterFirstNames});
+                             this.setState({commenterLastNames: result.commenterLastNames});
+                             this.setState({commentTimes: result.commentTimes});
+                             this.setState({commenterIDs: result.commenterIDs});
+                            },
+                            (error) => {
+                                return <>Error with API call: {getCommentsUrl}</>;
+                            }
+                        );
+                },
+                (error) => {
+                }
+            );
+    }
+
     decreaseGrade(criterionID) {
         let criteriaGrades = [...this.state.criteriaGrades];
         criteriaGrades[this.state.criteriaIDs.indexOf(criterionID)] -= 1;
@@ -162,7 +231,7 @@ class TryoutEvaluation extends React.Component {
                 (error) => {
                     return <>Error with API call: {updateAPI}</>;
                 }
-            )
+            );
     }
 
     handleSelection = (event)  => {
@@ -185,7 +254,23 @@ class TryoutEvaluation extends React.Component {
                     return <>Error with API call: {getEvalsUrl}</>;
                 }
             );
-    }
+        const getCommentsUrl = urlAPI + "getComments/?playerID=" + event.target.id;
+        fetch(getCommentsUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                 this.setState({savedComments: result.comments});
+                 this.setState({commentIDs: result.commentIDs});
+                 this.setState({commenterFirstNames: result.commenterFirstNames});
+                 this.setState({commenterLastNames: result.commenterLastNames});
+                 this.setState({commentTimes: result.commentTimes});
+                 this.setState({commenterIDs: result.commenterIDs});
+                },
+                (error) => {
+                    return <>Error with API call: {getCommentsUrl}</>;
+                }
+            );
+    };
 
     render() {
         return (
@@ -212,7 +297,7 @@ class TryoutEvaluation extends React.Component {
                                                              decreaseGrade={this.decreaseGrade}/>)
                            }
                        </div>
-                       <EvalComments selectedPlayer={this.state.selectedPlayer}/>
+                       <EvalComments commentTimes={this.state.commentTimes} savedComments={this.state.savedComments} commentIDs={this.state.commentIDs} submitComment={this.submitComment} deleteComment={this.deleteComment} commenterIDs={this.state.commenterIDs} commenterFirstNames={this.state.commenterFirstNames} commenterLastNames={this.state.commenterLastNames}/>
                    </div>
                    <div class="column">
                         <p class="is-size-3">Athlete List</p>
@@ -221,6 +306,7 @@ class TryoutEvaluation extends React.Component {
                                 (id) =>
                                     <ListItem button selected={this.props.selectedPlayer === id} onClick={this.handleSelection} key={id} id={id}>
                                         {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                        {this.state.playerTeams[this.state.playerIDs.indexOf(id)] ? " (" + this.state.playerTeams[this.state.playerIDs.indexOf(id)] + ") " : ""}
                                     </ListItem>
                                 )
                             }

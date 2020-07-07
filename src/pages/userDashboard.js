@@ -32,16 +32,16 @@ class UserDashboard extends React.Component {
 	render(){
 		return (
 			<div>
-				<section className="section has-background-black">
+				<section className="section"  style={{backgroundColor:"black"}}>
 					<div className="container is-vcentered">
 						<p className="is-size-1">Hey {this.props.userFirstName}! Welcome back to DreamTeam!</p>
 					</div>
 				</section>
-				<section className="section has-background-black">
+				<section className="section" style={{backgroundColor:"black"}}>
 					<div className="container">
 						<div className="columns">
 							<div className="column">
-								<div class="notification has-background-black">
+								<div class="notification" style={{backgroundColor:"black"}}>
 									<h class="is-size-3">Upcoming Sessions</h>
 									<p className="is-size-5">
 										You have no Upcoming Sessions
@@ -49,7 +49,7 @@ class UserDashboard extends React.Component {
 								</div>
 							</div>
 							<div className="column">
-								<div className="notification has-background-black">
+								<div className="notification" style={{backgroundColor:"black"}}>
 									<h class="is-size-3">Active Tryouts</h>
 									<p class="is-size-5">
 										{this.state.tryoutList.length > 0 ?
@@ -68,7 +68,7 @@ class UserDashboard extends React.Component {
 								</div>
 							</div>
 							<div className="column">
-								<div className="notification has-background-black">
+								<div className="notification" style={{backgroundColor:"black"}}>
 									<p class="is-size-3">Closed Tryouts</p>
 									<p className="is-size-5">
 										You have no closed Tryouts

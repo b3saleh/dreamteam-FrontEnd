@@ -62,7 +62,7 @@ function App() {
             <Menu open={open} setOpen={setOpen} />
           </div>
         <div class="hero">
-          <div class="hero-body has-background-warning has-text-black is-size-3" style={{padding:20, marginBottom:20}}>
+          <div class="hero-body has-background-warning has-text-black is-size-3" style={{padding:20, marginBottom:20, width:"100vw"}}>
             DreamTeam
           </div>
         </div>
@@ -87,6 +87,9 @@ function App() {
             </Switch>
           </Router>
         </div>
+        <footer class="footer" style={{margin:0, padding:0, backgroundColor:"black"}}>
+            For help or questions, contact b3saleh@uwaterloo.ca
+        </footer>
     </ThemeProvider>
   );
 }

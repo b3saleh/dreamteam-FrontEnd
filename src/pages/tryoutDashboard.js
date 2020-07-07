@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../DreamTeamLogo.PNG';
 import {urlAPI} from '../Constants';
 import {Redirect} from "react-router-dom";
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +10,6 @@ class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            updateRequired: true,
             buttonClicked: false,
             criteriaNames: [],
             tryoutName: "",
@@ -21,6 +19,7 @@ class TryoutDashboard extends React.Component {
             playerFirstNames: [],
             playerLastNames: [],
             playerIDs: [],
+            playerTeams: [],
             selected: 0,
             startTime:"" ,
             endTime:new Date(),
@@ -28,9 +27,37 @@ class TryoutDashboard extends React.Component {
             teamName:"",
             teamNames: [],
             teamIDs: []};
-    }
 
-    updateAPICalls = () => {
+        const getTeamListUrl = urlAPI + "listTeams/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getTeamListUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({teamNames: result.teamNames})
+                    this.setState({teamIDs: result.teamIDs})
+
+
+                },
+                (error) => {
+                    return <>Error with API call: {getTeamListUrl}</>;
+                }
+            );
+
+        const getPlayerListUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
+        fetch(getPlayerListUrl)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({playerFirstNames: result.playerFirstNames});
+                    this.setState({playerLastNames: result.playerLastNames});
+                    this.setState({playerIDs: result.playerIDs});
+                    this.setState({playerTeams: result.playerTeams});
+                    this.setState({selected: this.state.selected || result.playerIDs[0]})
+                },
+                (error) => {
+                    return <>Error with API call: {getPlayerListUrl}</>;
+                }
+            );
         const getListUrl = urlAPI + "listCriteria/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getListUrl)
             .then(
@@ -45,36 +72,6 @@ class TryoutDashboard extends React.Component {
                     return <>Error with API call: {getListUrl}</>;
                 }
             );
-        const getPlayerListUrl = urlAPI + "listPlayers/?tryoutID=" + localStorage.getItem('currentTryoutID');
-        fetch(getPlayerListUrl)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({playerFirstNames: result.playerFirstNames})
-                    this.setState({playerLastNames: result.playerLastNames})
-                    this.setState({playerIDs: result.playerIDs})
-                    this.setState({selected: this.state.selected || result.playerIDs[0]})
-                },
-                (error) => {
-                    return <>Error with API call: {getListUrl}</>;
-                }
-            );
-
-             const getTeamListUrl = urlAPI + "listTeams/?tryoutID=" + localStorage.getItem('currentTryoutID');
-        fetch(getTeamListUrl)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({teamNames: result.teamNames})
-                    this.setState({teamIDs: result.teamIDs})
-
-
-                },
-                (error) => {
-                    return <>Error with API call: {getListUrl}</>;
-                }
-            );
-        this.setState({updateRequired: false});
     }
 
    changeStartTime = (event) => {
@@ -137,26 +134,33 @@ class TryoutDashboard extends React.Component {
                     // Code if shit hit the fan
                 }
             );
-    }
+        };
 
         addTeam = (event) => {
-        
-        const addTeamUrl = urlAPI + "createTeam/?tryoutID=" + localStorage.getItem('currentTryoutID') + "&teamName=" + this.state.teamName; 
-        fetch(addTeamUrl, {method: 'POST'})
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({createSuccess: true})
-                    console.log("team added")
-                    console.log(this.state.teamName)
-                },
-                (error) => {
-                    // Code if shit hit the fan
-                }
-            );
-        this.setState({updateRequired: true});
-        this.setState({teamName: ""});
-    }
+            let encodedTeamName = encodeURIComponent(this.state.teamName.trim());
+            const addTeamUrl = urlAPI + "createTeam/?tryoutID=" + localStorage.getItem('currentTryoutID') + "&teamName=" + encodedTeamName;
+            fetch(addTeamUrl, {method: 'POST'})
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                            const getTeamListUrl = urlAPI + "listTeams/?tryoutID=" + localStorage.getItem('currentTryoutID');
+                            fetch(getTeamListUrl)
+                                .then(res => res.json())
+                                .then(
+                                    (result) => {
+                                        this.setState({teamNames: result.teamNames})
+                                        this.setState({teamIDs: result.teamIDs})
+                                    },
+                                    (error) => {
+                                        return <>Error with API call: {getTeamListUrl}</>;
+                                    }
+                                );
+                    },
+                    (error) => {
+                    }
+                );
+            this.setState({teamName: ""});
+        };
         
 
     render(){
@@ -170,17 +174,17 @@ class TryoutDashboard extends React.Component {
         return (
 
             <>
-                <div className="hero has-background-black">
+                <div className="hero" style={{backgroundColor:"black"}}>
                     <div className="hero-body">
                       <div className={"container"}>
                         <p className="is-size-1">{localStorage.getItem('currentTryoutName')} Tryout Dashboard</p>
                       </div>
                     </div>
                 </div>
-                <section className="section has-background-black">
+                <section className="section" style={{backgroundColor:"black"}}>
                         <div className="columns">
                             <div className="column">
-                                <div className="notification has-background-black">
+                                <div className="notification" style={{backgroundColor:"black"}}>
                                     <h className="is-size-3">Tryout Info</h>
                                           <form>
                                           <label> Tryout Name:</label>
@@ -202,7 +206,7 @@ class TryoutDashboard extends React.Component {
                                 </div>
                             </div>
                             <div className="column">
-                                <div className="notification has-background-black">
+                                <div className="notification" style={{backgroundColor:"black"}}>
                                     <h className="is-size-3">Actions</h>
                                     <p>
                                         <br/>
@@ -243,13 +247,14 @@ class TryoutDashboard extends React.Component {
                                 </div>
                             </div>
                             <div className="column">
-                                <div className="notification has-background-black">
+                                <div className="notification" style={{backgroundColor:"black"}}>
                                     <p className="is-size-3">Player List</p>
                                         <List className="is-size-5">
                                             {this.state.playerIDs.map(
                                                     (id) =>
                                                         <ListItem class="has-text-centered">
                                                             {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
+                                                            {this.state.playerTeams[this.state.playerIDs.indexOf(id)] ? " (" + this.state.playerTeams[this.state.playerIDs.indexOf(id)] + ") " : ""}
                                                         </ListItem>
                                                 )
                                             }
