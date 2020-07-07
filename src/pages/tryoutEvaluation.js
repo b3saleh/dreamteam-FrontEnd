@@ -1,7 +1,7 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
-import GaugeChart from 'react-gauge-chart';
+import GaugeChart from '../components/react-gauge-chart';
 import {urlAPI} from "../Constants";
 
 
