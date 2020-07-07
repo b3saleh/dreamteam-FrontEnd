@@ -3,7 +3,7 @@ import AU from "../AboutUs.jpg";
  
 export const About = () => {
     return (
-       <div className="columns is-vcentered">
+       <div className="columns is-vcentered" style={{padding:50}}>
            <div className="column is-7">
                <img src={AU} className="App-logo" alt="logo"/>
            </div>
