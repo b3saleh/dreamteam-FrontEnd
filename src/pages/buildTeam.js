@@ -320,8 +320,8 @@ class BuildTeam extends React.Component {
     }
 
     deleteTeam() {
-        let removePlayerUrl = urlAPI + "deleteTeam/?&teamID=" + localStorage.getItem('currentTeamID');
-        fetch(removePlayerUrl, {method: 'POST'})
+        let deleteTeamUrl = urlAPI + "deleteTeam/?&teamID=" + localStorage.getItem('currentTeamID');
+        fetch(deleteTeamUrl, {method: 'POST'})
             .then(res => res.json())
             .then(
                 (result) => {
@@ -329,7 +329,7 @@ class BuildTeam extends React.Component {
                     this.setState({redirect: "/TryoutDashboard"});
                 },
                 (error) => {
-                    return <>Error with API call: {removePlayerUrl}</>;
+                    return <>Error with API call: {deleteTeamUrl}</>;
                 }
             )
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import {urlAPI} from "../Constants";
 import {Link} from 'react-router-dom';
 import 'bulma/css/bulma.css';
+import UD from "../UserDashboard.jpg";
  
 class UserDashboard extends React.Component {
 	constructor(props){
@@ -27,7 +28,7 @@ class UserDashboard extends React.Component {
 	setTryoutID = (event) => {
 		localStorage.setItem('currentTryoutID', event.target.id);
 		localStorage.setItem('currentTryoutName', event.target.name);
-	}
+	};
 
 	render(){
 		return (
@@ -40,14 +41,17 @@ class UserDashboard extends React.Component {
 				<section className="section" style={{backgroundColor:"black"}}>
 					<div className="container">
 						<div className="columns">
-							<div className="column">
-								<div class="notification" style={{backgroundColor:"black"}}>
-									<h class="is-size-3">Upcoming Sessions</h>
-									<p className="is-size-5">
-										You have no Upcoming Sessions
-									</p>
-								</div>
+							<div class="column is-8">
+								<img src={UD} className="App-logo" alt="logo"/>
 							</div>
+							{/*<div className="column">*/}
+							{/*	<div class="notification" style={{backgroundColor:"black"}}>*/}
+							{/*		<h class="is-size-3">Upcoming Sessions</h>*/}
+							{/*		<p className="is-size-5">*/}
+							{/*			You have no Upcoming Sessions*/}
+							{/*		</p>*/}
+							{/*	</div>*/}
+							{/*</div>*/}
 							<div className="column">
 								<div className="notification" style={{backgroundColor:"black"}}>
 									<h class="is-size-3">Active Tryouts</h>
@@ -67,14 +71,14 @@ class UserDashboard extends React.Component {
 									</p>
 								</div>
 							</div>
-							<div className="column">
-								<div className="notification" style={{backgroundColor:"black"}}>
-									<p class="is-size-3">Closed Tryouts</p>
-									<p className="is-size-5">
-										You have no closed Tryouts
-									</p>
-								</div>
-							</div>
+							{/*<div className="column">*/}
+							{/*	<div className="notification" style={{backgroundColor:"black"}}>*/}
+							{/*		<p class="is-size-3">Closed Tryouts</p>*/}
+							{/*		<p className="is-size-5">*/}
+							{/*			You have no closed Tryouts*/}
+							{/*		</p>*/}
+							{/*	</div>*/}
+							{/*</div>*/}
 						</div>
 					</div>
 				</section>

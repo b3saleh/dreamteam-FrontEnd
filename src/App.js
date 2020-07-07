@@ -87,9 +87,9 @@ function App() {
             </Switch>
           </Router>
         </div>
-        <footer class="footer" style={{margin:0, padding:0, backgroundColor:"black"}}>
-            For help or questions, contact b3saleh@uwaterloo.ca
-        </footer>
+        {/*<footer class="footer" style={{margin:0, padding:0, backgroundColor:"black"}}>*/}
+        {/*    For help or questions, contact b3saleh@uwaterloo.ca*/}
+        {/*</footer>*/}
     </ThemeProvider>
   );
 }

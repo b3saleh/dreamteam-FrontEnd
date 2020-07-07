@@ -1,8 +1,7 @@
 import React from 'react';
-import logo from '../DreamTeamLogo.PNG';
-import { GlobalStyles } from '../global';
 import {urlAPI} from '../Constants';
 import { Redirect } from 'react-router-dom';
+import SI from "../SignIn.jpg";
 
 
 class SignInForm extends React.Component {
@@ -40,16 +39,18 @@ class SignInForm extends React.Component {
 		}
 		return (
 			<div>
-				{/*<img src={logo} className="bg" alt="logo"/>*/}
-       			<div className="columns is-centered">
-					<div className="column" style={{maxWidth:300}}>
+       			<div className="columns is-vcentered" style={{padding:50}}>
+					<div className="column is-7">
+					   <img src={SI} className="App-logo" alt="logo"/>
+				   </div>
+					<div className="column">
 						<h1>Sign In</h1>
 						<form>
 							{this.state.redirect}
-							<input type="text" value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
+							<input type="text" style={{maxWidth:300}} value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
 
 							<br/>
-							<input type="password" value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
+							<input type="password" style={{maxWidth:300}}  value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
 
 							<br/>
 							<input type="button" value="Sign In" onClick={this.checkUser}/>

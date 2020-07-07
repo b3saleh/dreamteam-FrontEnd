@@ -10,7 +10,7 @@ class TryoutDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            buttonClicked: false,
+            redirect: null,
             criteriaNames: [],
             tryoutName: "",
             createSuccess: false,
@@ -74,14 +74,12 @@ class TryoutDashboard extends React.Component {
             );
     }
 
-   changeStartTime = (event) => {
-             
-       
-        this.setState({
-
-            startTime: event.target.selected
-        })
-    }
+   // changeStartTime = (event) => {
+    //    //  this.setState({
+    //    //
+    //    //          startTime: event.target.selected
+    //    //      })
+    //    //  };
 
     changeAttribute = (event) => {
 		const fieldName = event.target.id;
@@ -91,17 +89,32 @@ class TryoutDashboard extends React.Component {
 
 			[fieldName]: value
 		})
-	}
+	};
 
     teamClicked = (event) => {
         localStorage.setItem("currentTeamID", event.target.id);
-    }
+    };
 
      buttonClicked = (event) => {
         this.setState({
-            buttonClicked:true
+            redirect:"/TryoutEvaluation"
         })
-    }
+    };
+
+     deleteTryout = (event) => {
+         let deleteTryoutUrl = urlAPI + "deleteTryout/?&tryoutID=" + localStorage.getItem('currentTryoutID');
+         fetch(deleteTryoutUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    localStorage.setItem('currentTryoutID', null);
+                    this.setState({redirect: "/Dashboard"});
+                },
+                (error) => {
+                    return <>Error with API call: {deleteTryoutUrl}</>;
+                }
+            )
+     };
 
     /*
 
@@ -164,12 +177,9 @@ class TryoutDashboard extends React.Component {
         
 
     render(){
-        if(this.state.buttonClicked){
-			return <Redirect to={'/tryoutEvaluation'} />
+        if(this.state.redirect){
+			return <Redirect to={this.state.redirect} />
 		}
-        if(this.state.updateRequired){
-            this.updateAPICalls();
-        }
 
         return (
 
@@ -186,23 +196,24 @@ class TryoutDashboard extends React.Component {
                             <div className="column">
                                 <div className="notification" style={{backgroundColor:"black"}}>
                                     <h className="is-size-3">Tryout Info</h>
-                                          <form>
-                                          <label> Tryout Name:</label>
-                                          <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} readOnly/>
+                                    <form>
+                                        <label> Tryout Name:</label>
+                                        <input type="text" id="tryoutName" value={localStorage.getItem("currentTryoutName")} readOnly/>
 
-                                          {
-                                              this.state.criteriaNames.map((criterion, idx) => (
-                                                  <>
+                                        {
+                                            this.state.criteriaNames.map((criterion, idx) => (
+                                                <>
                                                     <br/>
                                                     <label> Evaluation Criterion {idx + 1}:</label>
                                                     <input type="text" id={"criterion" + idx + "Name"} value={criterion} readOnly/>
-                                                  </>
-                                              ))
-                                          }
-                                          <label> Player Sign Up Form:</label>
-                                          <input type="text" value={"http://dreamteamulti.herokuapp.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
-
-                                          </form>
+                                                    </>
+                                            ))
+                                        }
+                                        <label> Player Sign Up Form:</label>
+                                        <input type="text" value={"http://dreamteamulti.herokuapp.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
+                                        <br/>
+                                        <input type="button" value="Delete Tryout" onClick={this.deleteTryout} />
+                                    </form>
                                 </div>
                             </div>
                             <div className="column">

@@ -1,9 +1,8 @@
 import React from 'react';
 import '../App.css';
-import logo from '../DreamTeamLogo.PNG';
-import { GlobalStyles } from '../global';
 import {urlAPI} from '../Constants';
 import { Redirect } from 'react-router-dom';
+import SU from "../SignUp.jpg";
 
 class SignUpForm extends React.Component {
 	constructor(props) {
@@ -46,23 +45,24 @@ class SignUpForm extends React.Component {
 			btn = <input type="button" value="Incomplete" onClick={this.runQuery} disabled={true}/>
 		}
 		return (
-		   <div>
-			{/*<img src={logo} className="bg" alt="logo" />*/}
-			<div className="columns is-centered">
-				<div className="column" style={{maxWidth:300}}>
+			<div className="columns is-vcentered" style={{padding:50}}>
+					<div className="column is-7">
+					   <img src={SU} className="App-logo" alt="logo"/>
+				   </div>
+				<div className="column">
 				 <h1>Sign Up</h1>
 				 <form>
-					 <input type="text" id="firstName" value={this.state.firstName} onChange={this.changeAttribute} placeholder= "First Name" />
+					 <input type="text" style={{maxWidth:300}} id="firstName" value={this.state.firstName} onChange={this.changeAttribute} placeholder= "First Name" />
 					 <br/>
-					 <input type="text" id="lastName" value={this.state.lastName} onChange={this.changeAttribute} placeholder= "Last Name" />
+					 <input type="text" style={{maxWidth:300}} id="lastName" value={this.state.lastName} onChange={this.changeAttribute} placeholder= "Last Name" />
 					 <br/>
-					 <input type="text" id="email" value={this.state.email} onChange={this.changeAttribute} placeholder= "Email" />
+					 <input type="text" style={{maxWidth:300}} id="email" value={this.state.email} onChange={this.changeAttribute} placeholder= "Email" />
 					 <br/>
-					 <input type="text" id="username" value={(this.state.username)}  onChange={this.changeAttribute} placeholder= "Username" />
+					 <input type="text" style={{maxWidth:300}} id="username" value={(this.state.username)}  onChange={this.changeAttribute} placeholder= "Username" />
 					 <br/>
-					 <input type="password" id="password" value={this.state.password} onChange={this.changeAttribute} placeholder= "Password" />
+					 <input type="password" style={{maxWidth:300}} id="password" value={this.state.password} onChange={this.changeAttribute} placeholder= "Password" />
 					 <br/>
-					 <input type="password" id="pwdConfirmation" value={this.state.pwdConfirmation} onChange={this.changeAttribute} placeholder= "Confirm Password" />
+					 <input type="password" style={{maxWidth:300}} id="pwdConfirmation" value={this.state.pwdConfirmation} onChange={this.changeAttribute} placeholder= "Confirm Password" />
 					 <br/>
 					 {btn}
 
@@ -70,8 +70,6 @@ class SignUpForm extends React.Component {
 
 			 	</div>
 			</div>
-
-		   </div>
 		);
 	}
 }

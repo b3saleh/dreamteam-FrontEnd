@@ -1,7 +1,4 @@
 import React from 'react';
-import { GlobalStyles } from '../global';
-import logo from '../DreamTeamLogo.PNG';
-import { TopNav } from '../components/TopNav';
 import {urlAPI} from '../Constants';
 import {Redirect} from "react-router-dom";
 
@@ -31,25 +28,18 @@ class tryoutSignUp extends React.Component {
 				},
 				(error) => {
 					// Code if shit hit the fan
-
 				}
 			);
     }
 
     render(){
-        console.log("This Tryout is " + this.props.match.params.tryoutID);
         if(this.state.createSuccess){
 			return <Redirect to={'/SignupSuccessful'} />
 		}
         return (
-
-           <div>
-            <img src={logo} className="bg_lower" alt="logo"/>
-            <TopNav />
-
-               <div class="text-block">
+            <div className="columns is-centered">
+                <div className="column" style={{maxWidth:300}}>
                     <h1>Player Sign Up</h1>
-
 
                  <form>
                  <label> Name:</label>

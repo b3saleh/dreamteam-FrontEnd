@@ -65,9 +65,9 @@ class CreateATryout extends React.Component {
 		}
         return (
 
-           <div>
 
-               <div class="column">
+            <div className="columns is-centered">
+                <div className="column" style={{maxWidth:300}}>
                     <h1>Create A Tryout</h1>
 
 

@@ -59,29 +59,34 @@ class EvalComments extends React.Component{
         return(
              <div>
                  <p style={{textAlign:"center"}}> Comments:</p>
-                 <List style={{padding:20}}>
+                 <article className="media"/>
                         {this.props.commentIDs.map(
                                 (id) =>
-                                    <ListItem>
-                                        <div style={{fontWeight:"bold"}}>
-                                            {this.props.commenterFirstNames[this.props.commentIDs.indexOf(id)]} {this.props.commenterLastNames[this.props.commentIDs.indexOf(id)] + ": "}
-                                        </div>
-                                        <div style={{fontStyle:"italic"}}>
-                                            "{this.props.savedComments[this.props.commentIDs.indexOf(id)] }"
-                                        </div>
-                                        <div style={{fontStyle:"italic"}}>
-                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? " - " + this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(11,19) : ""}
-                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? " - " + this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(0,10) : ""}
-                                        </div>
+                                        <article className="media is-centered" style={{padding:20}}>
+                                            <div className="media-content">
+                                                <div className="content">
+                                                    <p>
+                                                        <strong class="has-text-warning" style={{float:"left"}}>{this.props.commenterFirstNames[this.props.commentIDs.indexOf(id)]} {this.props.commenterLastNames[this.props.commentIDs.indexOf(id)] + ": "}</strong>
+                                                        <br/>
+                                                        <small style={{float:"left"}}>
+                                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(11,19) : ""}
+                                                            {this.props.commentTimes[this.props.commentIDs.indexOf(id)] ? " - " + this.props.commentTimes[this.props.commentIDs.indexOf(id)].slice(0,10) : ""}
+                                                        </small>
+                                                        <br/>
+                                                            "{this.props.savedComments[this.props.commentIDs.indexOf(id)] }"
+                                                    </p>
+                                                </div>
+                                            </div>
                                             {parseInt(this.props.commenterIDs[this.props.commentIDs.indexOf(id)]) === parseInt(localStorage.getItem('userID'))
                                                 ?
-                                                <a id={id} onClick={this.deleteClicked}>DELETE</a>
+                                                <div className="media-right">
+                                                    <button className="delete" onClick={this.deleteClicked} id={id}></button>
+                                                </div>
                                                 :
                                                 ""}
-                                    </ListItem>
+                                        </article>
                             )
                         }
-                 </List>
                  <input type="text" value={this.state.comment} onChange={this.updateComment} style={{width:"80%"}}/>
                  <br/>
                  <input type="button" value="Submit Comment" onClick={this.sendComment}/>
@@ -304,7 +309,7 @@ class TryoutEvaluation extends React.Component {
                         <List>
                             {this.state.playerIDs.map(
                                 (id) =>
-                                    <ListItem button selected={this.props.selectedPlayer === id} onClick={this.handleSelection} key={id} id={id}>
+                                    <ListItem class="is-centered is-size-5" button selected={this.props.selectedPlayer === id} onClick={this.handleSelection} key={id} id={id}>
                                         {this.state.playerFirstNames[this.state.playerIDs.indexOf(id)] + " " + this.state.playerLastNames[this.state.playerIDs.indexOf(id)]}
                                         {this.state.playerTeams[this.state.playerIDs.indexOf(id)] ? " (" + this.state.playerTeams[this.state.playerIDs.indexOf(id)] + ") " : ""}
                                     </ListItem>
