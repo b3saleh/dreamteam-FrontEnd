@@ -1,10 +1,7 @@
 import React from 'react';
-import { GlobalStyles } from '../global';
-import logo from '../DreamTeamLogo.PNG';
-import { TopNav } from '../components/TopNav';
 import {urlAPI} from '../Constants';
 import {Redirect} from "react-router-dom";
-import {forEach} from "react-bootstrap/cjs/ElementChildren";
+import CT from "../CreateTryout.jpg";
 
 
 class CreateATryout extends React.Component {
@@ -57,42 +54,43 @@ class CreateATryout extends React.Component {
 					// Code if shit hit the fan
 				}
 			);
-    }
+    };
 
     render(){
         if(this.state.createSuccess){
 			return <Redirect to={'/Dashboard'} />
 		}
         return (
+            <div className="columns is-vcentered" style={{padding:50}}>
+					<div className="column is-7">
+					   <img src={CT} className="App-logo" alt="logo"/>
+				   </div>
 
-
-            <div className="columns is-centered">
-                <div className="column" style={{maxWidth:300}}>
+                <div className="column">
                     <h1>Create A Tryout</h1>
+                     <br/>
 
 
-                 <form>
-                 <label> Tryout Name:</label>
-                 <input type="text" id="tryoutName" value={this.state.tryoutName} onChange={this.changeAttribute}/>
-
-
-                 <br/><br/>
-                 <label> Evaluation Criteria:</label>
-                 <br/><br/>
+                 <form class="is-centered">
+                 <input type="text" style={{maxWidth:300}} id="tryoutName" value={this.state.tryoutName} onChange={this.changeAttribute} placeholder="Tryout Name" />
 
                              {
                                  this.state.criteriaNames.map((criterion, idx) => (
-                                     <div className={"columns is-vcentered"}>
-                                         <div className={"column is-11"} style={{padding:0, margin:0}}>
-                                            <input type="text" id={idx} value={criterion} onChange={this.changeCriterion} />
+                                     <article className="media" style={{borderTop:0, margin:"auto", paddingTop:0, maxWidth:300}}>
+                                        <div className="media-content">
+                                            <div className="content">
+                                                <input type="text" id={idx} value={criterion} onChange={this.changeCriterion} placeholder={"Criterion " + (idx+1)} />
+                                            </div>
+                                        </div>
+                                         <div className="media-right">
+                                             <div className="content" style={{marginTop:6}}>
+                                                 <input type="button" value="-" onClick={this.handleRemoveCriterion(idx)}/>
+                                             </div>
                                          </div>
-                                         <div class={"column"}>
-                                            <input type="button" value="-" onClick={this.handleRemoveCriterion(idx)}/>
-                                         </div>
-                                      </div>
+                                     </article>
                                  ))
                              }
-                     <input type="button" value="Add Criterion" onClick={this.handleAddCriterion} />
+                     <input type="button" value="+" onClick={this.handleAddCriterion} />
                  <br/><br/>
                  <input type="button" value="Create Tryout" onClick={this.createTryout} />
                  </form>
