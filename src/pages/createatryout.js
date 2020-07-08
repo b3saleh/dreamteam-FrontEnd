@@ -11,12 +11,13 @@ class CreateATryout extends React.Component {
             tryoutName: "",
             numberOfCriteria: 1,
             criteriaNames: [""],
-            createSuccess: false};
-    }
+            createSuccess: false,
+            failureNotice: false};
+    };
 
     handleAddCriterion = (event) => {
         this.setState({criteriaNames: this.state.criteriaNames.concat([""])})
-    }
+    };
 
     changeAttribute = (event) => {
 		const fieldName = event.target.id;
@@ -24,25 +25,25 @@ class CreateATryout extends React.Component {
 		this.setState({
 			[fieldName]: value
 		})
-	}
+	};
 
 	changeCriterion = (event) => {
-		let newCriteriaNames = this.state.criteriaNames
-        newCriteriaNames[event.target.id] = event.target.value
+		let newCriteriaNames = this.state.criteriaNames;
+        newCriteriaNames[event.target.id] = event.target.value;
         this.setState({ shareholders: newCriteriaNames });
-    }
+    };
 
     handleRemoveCriterion = idx => () => {
-		let newCriteriaNames = this.state.criteriaNames
-        delete newCriteriaNames[idx]
+		let newCriteriaNames = this.state.criteriaNames;
+        delete newCriteriaNames[idx];
         this.setState({ shareholders: newCriteriaNames });
-    }
+    };
 
 	createTryout = (event) => {
-        let createTryoutUrl = urlAPI + "createTryout/?userID=" + this.props.userID + "&tryoutName=" + this.state.tryoutName;
-        this.state.criteriaNames.forEach(eachCriterion)
+        let createTryoutUrl = urlAPI + "createTryout/?userID=" + this.props.userID + "&tryoutName=" + encodeURIComponent(this.state.tryoutName.trim());
+        this.state.criteriaNames.forEach(eachCriterion);
         function eachCriterion(value) {
-          createTryoutUrl += "&criteria=" + value
+          createTryoutUrl += "&criteria=" + encodeURIComponent(value.trim());
         }
         fetch(createTryoutUrl, {method: 'POST'})
 			.then(res => res.json())
@@ -51,7 +52,7 @@ class CreateATryout extends React.Component {
 					this.setState({createSuccess: true})
 				},
 				(error) => {
-					// Code if shit hit the fan
+					this.setState({failureNotice: true})
 				}
 			);
     };
@@ -91,8 +92,11 @@ class CreateATryout extends React.Component {
                                  ))
                              }
                      <input type="button" value="+" onClick={this.handleAddCriterion} />
-                 <br/><br/>
-                 <input type="button" value="Create Tryout" onClick={this.createTryout} />
+                 <br/>
+                 {this.state.failureNotice ? "Sorry! Something when wrong :(" : ""}
+                 <br/>
+
+                 {this.state.tryoutName ? <input type="button" value="Create Tryout" onClick={this.createTryout} /> : <input type="button" value="Incomplete" disabled={true}/>}
                  </form>
                </div>
            </div>

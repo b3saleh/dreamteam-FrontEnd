@@ -26,7 +26,8 @@ class TryoutDashboard extends React.Component {
             executive:"",
             teamName:"",
             teamNames: [],
-            teamIDs: []};
+            teamIDs: [],
+            addExecMessage: ""};
 
         const getTeamListUrl = urlAPI + "listTeams/?tryoutID=" + localStorage.getItem('currentTryoutID');
         fetch(getTeamListUrl)
@@ -140,11 +141,11 @@ class TryoutDashboard extends React.Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({createSuccess: true})
-                    
+                    this.setState({createSuccess: true});
+                    this.setState({addExecMessage: "Executive Successfully Added"});
                 },
                 (error) => {
-                    // Code if shit hit the fan
+                    this.setState({addExecMessage: "User Not Found, make sure the email is linked to a valid account"});
                 }
             );
         };
@@ -252,7 +253,8 @@ class TryoutDashboard extends React.Component {
                                         </p>
                                             <label> Email:</label>
                                             <input type="text" id="executive" value={this.state.executive} onChange={this.changeAttribute} />
-
+                                            {this.state.addExecMessage}
+                                            <br/>
                                             <input type="button" value="Add Executive" onClick={this.addExecutive} />
                                             <br/>
                                 </div>

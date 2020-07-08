@@ -7,19 +7,19 @@ import SI from "../SignIn.jpg";
 class SignInForm extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = { username: '', password: '', userID: ''};
-	}
+		this.state = { username: '', password: '', userID: '', failureNotice: false};
+	};
 
 	usernameChangeHandler = (event) =>{
 		this.setState({username: event.target.value})
-	}
+	};
 
 	passwordChangeHandler = (event) =>{
 		this.setState({password: event.target.value})
-	}
+	};
 
 	checkUser = (event) => {
-		const checkUserUrl = urlAPI + "checkUser/?username=" + this.state.username + "&password=" + this.state.password;
+		const checkUserUrl = urlAPI + "checkUser/?username=" + encodeURIComponent(this.state.username.trim()) + "&password=" + encodeURIComponent(this.state.password.trim());
 		fetch(checkUserUrl)
 			.then(res => res.json())
 			.then(
@@ -28,8 +28,9 @@ class SignInForm extends React.Component {
 					this.setState({userID: result.userID});
 				},
 				(error) => {
+					this.setState({failureNotice: true});
 				});
-	}
+	};
 
 	render() {
 		if (this.state.userID){
@@ -46,12 +47,13 @@ class SignInForm extends React.Component {
 					<div className="column">
 						<h1>Sign In</h1>
 						<form>
-							{this.state.redirect}
+
 							<input type="text" style={{maxWidth:300}} value={this.state.username} onChange={this.usernameChangeHandler} placeholder="Username"/>
 
 							<br/>
 							<input type="password" style={{maxWidth:300}}  value={this.state.password} onChange={this.passwordChangeHandler} placeholder="Password"/>
 
+							{this.state.failureNotice ? "Username and password combination not found" : ""}
 							<br/>
 							<input type="button" value="Sign In" onClick={this.checkUser}/>
 

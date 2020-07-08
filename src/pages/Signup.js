@@ -7,7 +7,15 @@ import SU from "../SignUp.jpg";
 class SignUpForm extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {firstName: "", lastName: "", email: "", username: "", password: "", pwdConfirmation: "", createSuccess: false}
+		this.state = {
+			firstName: "",
+			lastName: "",
+			email: "",
+			username: "",
+			password: "",
+			pwdConfirmation: "",
+			createSuccess: false,
+			failureNotice: false}
 	}
 
 	changeAttribute = (event) => {
@@ -19,7 +27,7 @@ class SignUpForm extends React.Component {
 	}
 
 	runQuery = (event) => {
-		const createUserUrl = urlAPI + "createUser/?username=" + this.state.username + "&password=" + this.state.password + "&email=" + this.state.email + "&firstName=" + this.state.firstName + "&lastName=" + this.state.lastName;
+		const createUserUrl = urlAPI + "createUser/?username=" + encodeURIComponent(this.state.username.trim()) + "&password=" + encodeURIComponent(this.state.password.trim()) + "&email=" + encodeURIComponent(this.state.email.trim()) + "&firstName=" + encodeURIComponent(this.state.firstName.trim()) + "&lastName=" + encodeURIComponent(this.state.lastName.trim());
 		fetch(createUserUrl, {method: 'POST'})
 			.then(res => res.json())
 			.then(
@@ -27,7 +35,7 @@ class SignUpForm extends React.Component {
 					this.setState({createSuccess: true})
 				},
 				(error) => {
-					// Code if shit hit the fan
+					this.setState({failureNotice: true})
 				}
 			);
 
@@ -63,6 +71,7 @@ class SignUpForm extends React.Component {
 					 <input type="password" style={{maxWidth:300}} id="password" value={this.state.password} onChange={this.changeAttribute} placeholder= "Password" />
 					 <br/>
 					 <input type="password" style={{maxWidth:300}} id="pwdConfirmation" value={this.state.pwdConfirmation} onChange={this.changeAttribute} placeholder= "Confirm Password" />
+					 {this.state.failureNotice ? "Account Not Created" : ""}
 					 <br/>
 					 {btn}
 
