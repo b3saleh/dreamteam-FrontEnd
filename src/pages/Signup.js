@@ -15,7 +15,7 @@ class SignUpForm extends React.Component {
 			password: "",
 			pwdConfirmation: "",
 			createSuccess: false,
-			failureNotice: false}
+			failureNotice: ""}
 	}
 
 	changeAttribute = (event) => {
@@ -32,10 +32,15 @@ class SignUpForm extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
-					this.setState({createSuccess: true})
+					if(result.is_valid){
+						this.setState({createSuccess: true});
+					}
+					else{
+						this.setState({failureNotice: "Username already in use"});
+					}
 				},
 				(error) => {
-					this.setState({failureNotice: true})
+					this.setState({failureNotice: "API Call Failed"});
 				}
 			);
 
@@ -71,7 +76,7 @@ class SignUpForm extends React.Component {
 					 <input type="password" style={{maxWidth:300}} id="password" value={this.state.password} onChange={this.changeAttribute} placeholder= "Password" />
 					 <br/>
 					 <input type="password" style={{maxWidth:300}} id="pwdConfirmation" value={this.state.pwdConfirmation} onChange={this.changeAttribute} placeholder= "Confirm Password" />
-					 {this.state.failureNotice ? "Account Not Created" : ""}
+					 {this.state.failureNotice ? <><br/>{this.state.failureNotice}<br/></> : ""}
 					 <br/>
 					 {btn}
 
