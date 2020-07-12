@@ -211,7 +211,7 @@ class TryoutDashboard extends React.Component {
                                             ))
                                         }
                                         <label> Player Sign Up Form:</label>
-                                        <input type="text" value={"http://dreamteamulti.herokuapp.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
+                                        <input type="text" value={"dreamteamulti.com/TryoutSignUp/" + localStorage.getItem("currentTryoutID")} id="tryoutLink" readOnly/>
                                         <br/>
                                         <input type="button" value="Delete Tryout" onClick={this.deleteTryout} />
                                     </form>

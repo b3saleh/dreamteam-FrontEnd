@@ -1,38 +1,8 @@
 import React from 'react';
 import logo from '../DreamTeamLogo.PNG';
 import {Redirect} from "react-router-dom";
-import { Fade } from 'react-slideshow-image';
+import ReactPlayer from "react-player";
 
-const fadeImages = [
-  logo
-];
-
-const fadeProperties = {
-  duration: 5000,
-  transitionDuration: 500,
-  infinite: false,
-  indicators: true
-};
-
-const Slideshow = () => {
-  return (
-    <Fade {...fadeProperties}>
-      <div className="each-fade">
-        <div className="image-container">
-          <img src={fadeImages[0]}  className="App-logo" alt="logo"/>
-        </div>
-        <h2>First Slide</h2>
-      </div>
-      <div className="each-fade">
-        <div className="image-container">
-          <img src={fadeImages[1]} />
-        </div>
-        <h2>Second Slide</h2>
-      </div>
-    </Fade>
-  )
-};
- 
 export const Home = () => {
     if (localStorage.getItem('userID')){
         return (
@@ -41,9 +11,14 @@ export const Home = () => {
     }
 
     return (
-        <div className="columns is-centered">
+        <div className="columns is-centered is-multiline">
             <div className="column is-8" >
                 <img src={logo} className="App-logo" alt="logo"/>
+            </div>
+            <div className="column is-8">
+              <ReactPlayer width="100%" height="100vh"
+                url="https://www.youtube.com/watch?v=VGH_tBSS2QY&feature=youtu.be&hd=1"
+              />
             </div>
         </div>
     );
