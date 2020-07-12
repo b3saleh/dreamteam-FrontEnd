@@ -36,11 +36,11 @@ class SignUpForm extends React.Component {
 						this.setState({createSuccess: true});
 					}
 					else{
-						this.setState({failureNotice: "Username already in use"});
+						this.setState({failureNotice: "Username or Email already in use"});
 					}
 				},
 				(error) => {
-					this.setState({failureNotice: "API Call Failed"});
+					this.setState({failureNotice: "API Call Failed with code: " + error});
 				}
 			);
 
