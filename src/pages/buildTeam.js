@@ -85,20 +85,8 @@ class TeamPlayerList extends React.Component {
         this.state = {teamChecked: []};
     }
 
-    handleToggle = (event) => {
-        let currentIndex = this.state.teamChecked.indexOf(event.target.id);
-        let newChecked = [...this.state.teamChecked];
-        if (currentIndex === -1) {
-          newChecked.push(event.target.id);
-        } else {
-          newChecked.splice(currentIndex, 1);
-        }
-        this.setState({teamChecked: newChecked});
-    };
-
-    handleRemove = () => {
-        this.props.removePlayers(this.state.teamChecked);
-        this.setState({teamChecked: []});
+    handleRemove = (event) => {
+        this.props.removePlayers(event.target.id);
     };
 
     render() {
@@ -110,11 +98,9 @@ class TeamPlayerList extends React.Component {
                   <>
                     <Paper className={useStyles.paper}>
                           <List className= "team_list" dense component="div" role="list">
-                            <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
+                            <ListItem key={id} id={id} role="listitem" button onClick={this.handleRemove}>
                               <ListItemIcon>
-                                <DTCheckBox onToggle={this.handleToggle}
-                                  id={id}
-                                  checkedBool={this.state.teamChecked.indexOf(id.toString()) !== -1} />
+                                <input type="button" value="-" onClick={this.handleRemove} id={id} />
                               </ListItemIcon>
                               <ListItemText primary={this.props.teamPlayerFirstNames[this.props.teamPlayerIDs.indexOf(id)] + " " + this.props.teamPlayerLastNames[this.props.teamPlayerIDs.indexOf(id)]} />
                             </ListItem>
@@ -123,11 +109,6 @@ class TeamPlayerList extends React.Component {
                   </>
               )
             }
-            <input
-                type="button"
-                value="Remove Selected"
-                onClick={this.handleRemove}
-              />
             </>
         )
     }
@@ -138,23 +119,10 @@ class TeamPlayerList extends React.Component {
 class AvailablePlayerList extends React.Component {
     constructor(props){
         super(props);
-        this.state = {availableChecked: []};
     }
 
-  handleToggle = (event) => {
-        let currentIndex = this.state.availableChecked.indexOf(event.target.id);
-        let newChecked = [...this.state.availableChecked];
-        if (currentIndex === -1) {
-          newChecked.push(event.target.id);
-        } else {
-          newChecked.splice(currentIndex, 1);
-        }
-        this.setState({availableChecked: newChecked});
-  };
-
-  handleAdd = () => {
-    this.props.addPlayers(this.state.availableChecked);
-    this.setState({availableChecked: []});
+  handleAdd = (event) => {
+    this.props.addPlayers(event.target.id);
   };
 
   render() {
@@ -166,19 +134,12 @@ class AvailablePlayerList extends React.Component {
                   (id) =>
                         <ListItem key={id} id={id} role="listitem" button onClick={this.handleToggle}>
                           <ListItemIcon>
-                            <DTCheckBox onToggle={this.handleToggle}
-                              id={id}
-                              checkedBool={this.state.availableChecked.indexOf(id.toString()) !== -1} />
+                            <input type="button" value="+" onClick={this.handleAdd} id={id} />
                           </ListItemIcon>
                           <ListItemText primary={this.props.availablePlayerFirstNames[this.props.availablePlayerIDs.indexOf(id)] + " " + this.props.availablePlayerLastNames[this.props.availablePlayerIDs.indexOf(id)]} />
                         </ListItem>
               )
             }
-            <input
-                type="button"
-                value="Add Selected"
-                onClick={this.handleAdd}
-              />
             </>
       );
   }
@@ -280,43 +241,32 @@ class BuildTeam extends React.Component {
         );
     };
 
-    addPlayers(playerIDList) {
-        let addPlayerUrl = "";
-        playerIDList.map(
-            (playerID) => {
-                addPlayerUrl = urlAPI + "addPlayerToTeam/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
-                fetch(addPlayerUrl, {method: 'POST'})
-                    .then(res => res.json())
-                    .then(
-                        (result) => {
-                            this.UpdateApiCalls()
-                        },
-                        (error) => {
-                            return <>Error with API call: {addPlayerUrl}</>;
-                        }
-                    )
-            }
-        );
+    addPlayers(playerID) {
+        let addPlayerUrl = urlAPI + "addPlayerToTeam/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
+        fetch(addPlayerUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.UpdateApiCalls()
+                },
+                (error) => {
+                    return <>Error with API call: {addPlayerUrl}</>;
+                }
+            )
     }
 
-    removePlayers(playerList) {
-        let removePlayerUrl = "";
-        playerList.map(
-            (playerID) => {
-                removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
-                fetch(removePlayerUrl, {method: 'POST'})
-                    .then(res => res.json())
-                    .then(
-                        (result) => {
-                            this.UpdateApiCalls()
-                        },
-                        (error) => {
-                            return <>Error with API call: {removePlayerUrl}</>;
-                        }
-                    )
-
-            }
-        );
+    removePlayers(playerID) {
+        let removePlayerUrl = urlAPI + "releasePlayer/?playerID=" + playerID + "&teamID=" + localStorage.getItem('currentTeamID');
+        fetch(removePlayerUrl, {method: 'POST'})
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.UpdateApiCalls()
+                },
+                (error) => {
+                    return <>Error with API call: {removePlayerUrl}</>;
+                }
+            )
     }
 
     deleteTeam() {
